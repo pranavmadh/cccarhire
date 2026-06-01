@@ -1,0 +1,26 @@
+[
+  {
+    "id": "nissan-qashqai",
+    "name": "Nissan Qashqai",
+    "price": 100,
+    "passengers": 3,
+    "image": "/uploads/chauffer/Nissan_Qashqai.png",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "hyundai-h1",
+    "name": "Hyundai H1",
+    "price": 150,
+    "passengers": 10,
+    "image": "/uploads/chauffer/Hyundai_h1.png",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "nissan-urvan",
+    "name": "Nissan Urvan",
+    "price": 200,
+    "passengers": 14,
+    "image": "/uploads/chauffer/Nissan_Urvan.png",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+]
