@@ -1,4 +1,5 @@
 import { addChauffeurCar, getAllChauffeurCars, saveChauffeurImage } from "@/lib/chauffeur-cars";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -49,6 +50,8 @@ export async function POST(request: Request) {
     const imagePath = await saveChauffeurImage(imageFile);
     const car = await addChauffeurCar({ name, price, passengers, imagePath });
 
+    revalidatePath("/");
+    revalidatePath("/chauffeur");
     return NextResponse.json({ car }, { status: 201 });
   } catch (error) {
     console.error("POST /api/chauffeur:", error);

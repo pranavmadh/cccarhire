@@ -1,5 +1,6 @@
 import { addVehicle, getAllVehicles, saveUploadedImage } from "@/lib/vehicles";
 import type { Transmission, VehicleCategory } from "@/lib/types/vehicle";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -184,6 +185,8 @@ export async function POST(request: Request) {
       imagePath,
     });
 
+    revalidatePath("/");
+    revalidatePath("/vehicles");
     return NextResponse.json({ vehicle }, { status: 201 });
   } catch (error) {
     console.error("POST /api/vehicles:", error);

@@ -1,4 +1,5 @@
 import { removeChauffeurCar, saveChauffeurImage, updateChauffeurCar } from "@/lib/chauffeur-cars";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -45,6 +46,8 @@ export async function PATCH(
     }
 
     const car = await updateChauffeurCar(id, input);
+    revalidatePath("/");
+    revalidatePath("/chauffeur");
     return NextResponse.json({ car });
   } catch (error) {
     console.error("PATCH /api/chauffeur/[id]:", error);
@@ -74,6 +77,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Car not found" }, { status: 404 });
     }
 
+    revalidatePath("/");
+    revalidatePath("/chauffeur");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/chauffeur/[id]:", error);

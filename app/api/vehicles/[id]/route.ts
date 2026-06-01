@@ -1,5 +1,6 @@
 import { removeVehicle, saveUploadedImage, updateVehicle } from "@/lib/vehicles";
 import type { Transmission, VehicleCategory } from "@/lib/types/vehicle";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -107,6 +108,8 @@ export async function PATCH(
     }
 
     const vehicle = await updateVehicle(id, input);
+    revalidatePath("/");
+    revalidatePath("/vehicles");
     return NextResponse.json({ vehicle });
   } catch (error) {
     console.error("PATCH /api/vehicles/[id]:", error);
@@ -146,6 +149,8 @@ export async function DELETE(
       );
     }
 
+    revalidatePath("/");
+    revalidatePath("/vehicles");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/vehicles/[id]:", error);
