@@ -221,15 +221,15 @@ export default function BookingForm({ vehicle }: Props) {
       </div>
 
       {/* ── Body ── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 xl:grid-cols-[1fr_400px]">
 
           {/* ══ LEFT: form sections ══ */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
 
             {/* ── Section 1: Pickup & Return ── */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-2.003 3.5-4.697 3.5-8.327a8 8 0 1 0-16 0c0 3.63 1.556 6.326 3.5 8.327a19.583 19.583 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.144.742ZM11.5 13.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" clipRule="evenodd" />
                 </svg>
@@ -241,40 +241,37 @@ export default function BookingForm({ vehicle }: Props) {
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Pickup Location</label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .988.55l.078.041.019.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clipRule="evenodd" />
                     </svg>
                     <select
                       value={pickupLoc}
                       onChange={(e) => handlePickupLocChange(e.target.value)}
-                      className={selectCls + ' pl-9'}
+                      className={selectCls + ' sm:pl-9'}
                     >
                       {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-medium text-gray-600">Return Location</label>
-                    <label className="flex items-center gap-1.5 cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={sameLoc}
-                        onChange={(e) => handleSameLocChange(e.target.checked)}
-                        className="h-3.5 w-3.5 rounded border-gray-300 text-brand-blue accent-brand-blue"
-                      />
-                      <span className="text-xs text-gray-500">Return to same location</span>
-                    </label>
-                  </div>
+                  <label className="text-xs font-medium text-gray-600 mb-1.5 block">Return Location</label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none mb-2 w-fit rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                    <input
+                      type="checkbox"
+                      checked={sameLoc}
+                      onChange={(e) => handleSameLocChange(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 text-brand-blue accent-brand-blue"
+                    />
+                    <span className="text-xs font-medium text-gray-600">{sameLoc ? "Same as pickup" : "Reset to pickup"}</span>
+                  </label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .988.55l.078.041.019.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clipRule="evenodd" />
                     </svg>
                     <select
                       value={returnLoc}
-                      onChange={(e) => setReturnLoc(e.target.value)}
-                      disabled={sameLoc}
-                      className={selectCls + ' pl-9 disabled:bg-gray-50 disabled:text-gray-400'}
+                      onChange={(e) => { setReturnLoc(e.target.value); setSameLoc(false); }}
+                      className={selectCls + ' sm:pl-9'}
                     >
                       {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
                     </select>
@@ -283,11 +280,11 @@ export default function BookingForm({ vehicle }: Props) {
               </div>
 
               {/* Pickup row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 mb-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Pickup Date</label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" clipRule="evenodd" />
                     </svg>
                     <input
@@ -298,28 +295,28 @@ export default function BookingForm({ vehicle }: Props) {
                         setPickupDate(e.target.value);
                         if (e.target.value >= returnDate) setReturnDate(addDays(e.target.value, 1));
                       }}
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Pickup Time</label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clipRule="evenodd" />
                     </svg>
                     <input
                       type="time"
                       value={pickupTime}
                       onChange={(e) => setPickupTime(e.target.value)}
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Flight Number <span className="text-gray-400">(Optional)</span></label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path d="M3.105 2.289a.75.75 0 0 0-.826.95l1.414 4.925A1.5 1.5 0 0 0 5.135 9.25h6.115a.25.25 0 0 1 0 .5H5.135a1.5 1.5 0 0 0-1.442 1.086l-1.414 4.926a.75.75 0 0 0 .826.95 28.896 28.896 0 0 0 15.293-7.154.75.75 0 0 0 0-1.114A28.897 28.897 0 0 0 3.105 2.289Z" />
                     </svg>
                     <input
@@ -327,18 +324,18 @@ export default function BookingForm({ vehicle }: Props) {
                       value={pickupFlight}
                       onChange={(e) => setPickupFlight(e.target.value)}
                       placeholder="Air Seychelles HM123"
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
               </div>
 
               {/* Return row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Return Date</label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" clipRule="evenodd" />
                     </svg>
                     <input
@@ -346,28 +343,28 @@ export default function BookingForm({ vehicle }: Props) {
                       value={returnDate}
                       min={addDays(pickupDate, 1)}
                       onChange={(e) => setReturnDate(e.target.value)}
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Return Time</label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clipRule="evenodd" />
                     </svg>
                     <input
                       type="time"
                       value={returnTime}
                       onChange={(e) => setReturnTime(e.target.value)}
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Flight Number <span className="text-gray-400">(Optional)</span></label>
                   <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path d="M3.105 2.289a.75.75 0 0 0-.826.95l1.414 4.925A1.5 1.5 0 0 0 5.135 9.25h6.115a.25.25 0 0 1 0 .5H5.135a1.5 1.5 0 0 0-1.442 1.086l-1.414 4.926a.75.75 0 0 0 .826.95 28.896 28.896 0 0 0 15.293-7.154.75.75 0 0 0 0-1.114A28.897 28.897 0 0 0 3.105 2.289Z" />
                     </svg>
                     <input
@@ -375,7 +372,7 @@ export default function BookingForm({ vehicle }: Props) {
                       value={returnFlight}
                       onChange={(e) => setReturnFlight(e.target.value)}
                       placeholder="Air Seychelles HM456"
-                      className={inputCls + ' pl-9'}
+                      className={inputCls + ' sm:pl-9'}
                     />
                   </div>
                 </div>
@@ -383,8 +380,8 @@ export default function BookingForm({ vehicle }: Props) {
             </div>
 
             {/* ── Section 2: Insurance ── */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.75.75 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516 11.209 11.209 0 0 1-7.877-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
                 </svg>
@@ -438,8 +435,8 @@ export default function BookingForm({ vehicle }: Props) {
             </div>
 
             {/* ── Section 3: Extras ── */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path d="M10.5 1.875a1.125 1.125 0 0 1 2.25 0v.375h3.375A2.625 2.625 0 0 1 18.75 4.875v13.5A2.625 2.625 0 0 1 16.125 21H7.875A2.625 2.625 0 0 1 5.25 18.375V4.875A2.625 2.625 0 0 1 7.875 2.25H11.25v-.375ZM8.625 7.875a.75.75 0 0 0 0 1.5h6.75a.75.75 0 0 0 0-1.5h-6.75Z" />
                 </svg>
@@ -506,8 +503,8 @@ export default function BookingForm({ vehicle }: Props) {
             </div>
 
             {/* ── Section 5: Customer Details ── */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                 </svg>
@@ -599,8 +596,8 @@ export default function BookingForm({ vehicle }: Props) {
             </div>
 
             {/* ── Section 6: Payment Method ── */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" />
                   <path fillRule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clipRule="evenodd" />
