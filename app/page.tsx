@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Vehicles from "@/components/Vehicles";
 import ChauffeurSection from "@/components/ChauffeurSection";
+import TransferSection from "@/components/TransferSection";
 import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
 import AboutUs from "@/components/AboutUs";
@@ -39,6 +40,7 @@ export default function Home() {
         <Services />
         <Vehicles />
         <ChauffeurSection />
+        <TransferSection />
         <Suspense fallback={<ReviewsSkeleton />}>
           <Reviews />
         </Suspense>

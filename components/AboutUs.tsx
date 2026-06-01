@@ -80,7 +80,7 @@ export default function AboutUs() {
           </div>
 
           <div className="text-center lg:text-left">
-            <p className="font-poppins text-sm font-bold uppercase tracking-wider text-brand-blue">
+            <p className="font-poppins text-md font-bold uppercase tracking-wider text-brand-blue">
               About Us
               <span className="mt-2 mx-auto block h-0.5 w-10 rounded-full bg-brand-yellow lg:mx-0" />
             </p>

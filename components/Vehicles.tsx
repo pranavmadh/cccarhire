@@ -229,7 +229,7 @@ export default function Vehicles() {
     <section id="vehicles" className="bg-white py-16 sm:py-20" aria-labelledby="vehicles-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="font-poppins text-sm font-bold uppercase tracking-wider text-brand-blue">
+          <p className="font-poppins text-md font-bold uppercase tracking-wider text-brand-blue">
             Our Vehicles
             <span className="mx-auto mt-2 block h-0.5 w-10 rounded-full bg-brand-yellow" />
           </p>

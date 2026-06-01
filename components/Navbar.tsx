@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/vehicles", label: "Vehicles" },
   { href: "/chauffeur", label: "Chauffeur" },
+  { href: "/transfer", label: "Transfer" },
   { href: "/praslin", label: "Praslin Island" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
@@ -78,7 +79,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white shadow-sm">
       <nav
-        className="mx-auto flex h-32 items-center justify-between px-4 sm:px-6 lg:px-10 max-w-7xl"
+        className="mx-auto flex h-32 items-center justify-between px-4 sm:px-6 lg:px-10 max-w-8xl"
         aria-label="Main navigation"
       >
         <Link

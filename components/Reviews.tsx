@@ -163,7 +163,7 @@ export default async function Reviews() {
 
         {/* Header */}
         <div className="text-center">
-          <p className="font-poppins text-sm font-bold uppercase tracking-wider text-brand-blue">
+          <p className="font-poppins text-md font-bold uppercase tracking-wider text-brand-blue">
             Customer Reviews
             <span className="mx-auto mt-2 block h-0.5 w-10 rounded-full bg-brand-yellow" />
           </p>
