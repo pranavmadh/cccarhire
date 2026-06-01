@@ -23,7 +23,7 @@ const faqs = [
       </svg>
     ),
     question: 'What is your fuel policy?',
-    answer: 'All vehicles are provided with a full tank of fuel. We ask that you return the car with a full tank. If you choose the Fuel Prepay add-on, you can return the car on any fuel level.',
+    answer: 'Return the vehicle with the same fuel level provided.',
   },
   {
     icon: (

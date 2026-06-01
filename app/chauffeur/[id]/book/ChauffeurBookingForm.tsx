@@ -51,6 +51,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
 
   const [babySeat, setBabySeat] = useState(0);
   const [childBooster, setChildBooster] = useState(0);
+  const [addDriver, setAddDriver] = useState(false);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -64,7 +65,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
 
   const duration = useMemo(() => diffDays(startDate, endDate), [startDate, endDate]);
   const subtotal = car.price * duration;
-  const extrasTotal = (babySeat * 5 + childBooster * 5) * duration;
+  const extrasTotal = babySeat * 5 + childBooster * 5;
   const total = subtotal + extrasTotal;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -78,8 +79,9 @@ export default function ChauffeurBookingForm({ car }: Props) {
 
     const paymentLabel = payment === 'arrival' ? 'Cash on Arrival' : 'Card on Arrival';
     const extraLines: string[] = [];
-    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5 * duration)}`);
-    if (childBooster > 0) extraLines.push(`  • Child Booster x${childBooster}: €${fmt2(childBooster * 5 * duration)}`);
+    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
+    if (childBooster > 0) extraLines.push(`  • Child Booster x${childBooster}: €${fmt2(childBooster * 5)}`);
+    if (addDriver) extraLines.push(`  • Second Driver: Free`);
     if (extraLines.length === 0) extraLines.push('  None');
 
     const lines = [
@@ -259,7 +261,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
                     <select value={babySeat} onChange={(e) => setBabySeat(Number(e.target.value))} className="mt-1 w-full rounded border border-gray-200 py-0.5 text-xs text-gray-700 focus:outline-none focus:border-brand-blue">
                       {[0, 1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
-                    <p className="mt-1 text-xs text-gray-400">€5.00 / Day</p>
+                    <p className="mt-1 text-xs text-gray-400">€5.00 / Trip</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 rounded-xl border border-gray-200 p-3">
@@ -272,9 +274,26 @@ export default function ChauffeurBookingForm({ car }: Props) {
                     <select value={childBooster} onChange={(e) => setChildBooster(Number(e.target.value))} className="mt-1 w-full rounded border border-gray-200 py-0.5 text-xs text-gray-700 focus:outline-none focus:border-brand-blue">
                       {[0, 1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
-                    <p className="mt-1 text-xs text-gray-400">€5.00 / Day</p>
+                    <p className="mt-1 text-xs text-gray-400">€5.00 / Trip</p>
                   </div>
                 </div>
+
+                {/* Second Driver */}
+                <label className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-brand-blue/30 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-8 w-8 shrink-0 text-brand-blue" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                  </svg>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium text-gray-800">Second Driver</p>
+                    <p className="text-xs text-green-600 font-semibold mt-0.5">Free</p>
+                    <input
+                      type="checkbox"
+                      checked={addDriver}
+                      onChange={(e) => setAddDriver(e.target.checked)}
+                      className="mt-1.5 h-4 w-4 rounded border-gray-300 accent-brand-blue"
+                    />
+                  </div>
+                </label>
               </div>
             </div>
 
@@ -420,19 +439,25 @@ export default function ChauffeurBookingForm({ car }: Props) {
                   </div>
                 </div>
 
-                {extrasTotal > 0 && (
+                {(extrasTotal > 0 || addDriver) && (
                   <div className="px-5 py-4 border-b border-gray-100 space-y-2 text-sm">
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Extras</p>
                     {babySeat > 0 && (
                       <div className="flex justify-between text-gray-700">
                         <span>Baby Seat ({babySeat})</span>
-                        <span className="font-medium">€{fmt2(babySeat * 5 * duration)}</span>
+                        <span className="font-medium">€{fmt2(babySeat * 5)}</span>
                       </div>
                     )}
                     {childBooster > 0 && (
                       <div className="flex justify-between text-gray-700">
                         <span>Child Booster ({childBooster})</span>
-                        <span className="font-medium">€{fmt2(childBooster * 5 * duration)}</span>
+                        <span className="font-medium">€{fmt2(childBooster * 5)}</span>
+                      </div>
+                    )}
+                    {addDriver && (
+                      <div className="flex justify-between text-gray-700">
+                        <span>Second Driver</span>
+                        <span className="font-medium text-green-600">Free</span>
                       </div>
                     )}
                   </div>

@@ -31,7 +31,7 @@ const INSURANCE_OPTIONS = [
     label: 'Reduced Excess',
     badge: null,
     desc: 'Reduce excess to EUR 500\nfor extra peace of mind',
-    pricePerDay: 10,
+    pricePerDay: 5,
   },
 ];
 
@@ -114,7 +114,7 @@ export default function BookingForm({ vehicle }: Props) {
   const subtotal = ratePerDay * duration;
   const insPerDay = INSURANCE_OPTIONS.find((o) => o.id === insurance)!.pricePerDay;
   const insTotal = insPerDay * duration;
-  const extrasDaily = (babySeat * 5 + childBooster * 5) * duration;
+  const extrasDaily = babySeat * 5 + childBooster * 5;
   const total = subtotal + insTotal + extrasDaily;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -135,8 +135,8 @@ export default function BookingForm({ vehicle }: Props) {
     const paymentLabel = payment === 'arrival' ? 'Cash on Arrival' : 'Card on Arrival';
 
     const extraLines: string[] = [];
-    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5 * duration)}`);
-    if (childBooster > 0) extraLines.push(`  • Child Booster Seat x${childBooster}: €${fmt2(childBooster * 5 * duration)}`);
+    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
+    if (childBooster > 0) extraLines.push(`  • Child Booster Seat x${childBooster}: €${fmt2(childBooster * 5)}`);
     if (addDriver) extraLines.push(`  • Second Driver: Free`);
     if (extraLines.length === 0) extraLines.push('  None');
 
@@ -459,7 +459,7 @@ export default function BookingForm({ vehicle }: Props) {
                     >
                       {[0, 1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
-                    <p className="mt-1 text-xs text-gray-400">€5.00 / Day</p>
+                    <p className="mt-1 text-xs text-gray-400">€5.00 / Trip</p>
                   </div>
                 </div>
 
@@ -478,7 +478,7 @@ export default function BookingForm({ vehicle }: Props) {
                     >
                       {[0, 1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
-                    <p className="mt-1 text-xs text-gray-400">€5.00 / Day</p>
+                    <p className="mt-1 text-xs text-gray-400">€5.00 / Trip</p>
                   </div>
                 </div>
 
@@ -763,13 +763,13 @@ export default function BookingForm({ vehicle }: Props) {
                   {babySeat > 0 && (
                     <div className="flex justify-between text-gray-700">
                       <span>Baby Seat ({babySeat})</span>
-                      <span className="font-medium">€{fmt2(babySeat * 5 * duration)}</span>
+                      <span className="font-medium">€{fmt2(babySeat * 5)}</span>
                     </div>
                   )}
                   {childBooster > 0 && (
                     <div className="flex justify-between text-gray-700">
                       <span>Child Booster ({childBooster})</span>
-                      <span className="font-medium">€{fmt2(childBooster * 5 * duration)}</span>
+                      <span className="font-medium">€{fmt2(childBooster * 5)}</span>
                     </div>
                   )}
                   {addDriver && (
