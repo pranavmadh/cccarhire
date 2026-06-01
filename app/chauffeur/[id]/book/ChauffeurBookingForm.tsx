@@ -155,23 +155,23 @@ export default function ChauffeurBookingForm({ car }: Props) {
       </div>
 
       {/* Body */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 xl:grid-cols-[1fr_400px]">
 
           {/* LEFT */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
 
             {/* Section 1: Tour Dates & Location */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-2.003 3.5-4.697 3.5-8.327a8 8 0 1 0-16 0c0 3.63 1.556 6.326 3.5 8.327a19.583 19.583 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.144.742ZM11.5 13.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" clipRule="evenodd" />
                 </svg>
                 1. Tour Dates &amp; Pickup Location
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div className="sm:col-span-2">
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Pickup Location</label>
                   <div className="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
@@ -209,7 +209,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
                     <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} className={inputCls + ' pl-9'} />
                   </div>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">End Date</label>
                   <div className="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue" aria-hidden>
@@ -227,32 +227,22 @@ export default function ChauffeurBookingForm({ car }: Props) {
               </div>
 
               {/* Included banner */}
-              <div className="mt-2 rounded-xl bg-brand-blue/5 border border-brand-blue/10 px-4 py-3">
+              <div className="mt-3 rounded-xl bg-brand-blue/5 border border-brand-blue/10 px-3 py-3">
                 <p className="text-xs font-semibold text-brand-blue mb-2">Included with every chauffeur booking:</p>
-                <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-600">
-                  <span className="flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-brand-blue" aria-hidden><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" /></svg>
-                    Professional Chauffeur
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-brand-blue" aria-hidden><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" /></svg>
-                    Fuel Costs Covered
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-brand-blue" aria-hidden><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" /></svg>
-                    Air Conditioning
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-brand-blue" aria-hidden><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" /></svg>
-                    Full Day Tour
-                  </span>
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-gray-600">
+                  {["Professional Chauffeur", "Fuel Costs Covered", "Air Conditioning", "Full Day Tour"].map((item) => (
+                    <span key={item} className="flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-brand-blue" aria-hidden><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" /></svg>
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Section 2: Extras */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path d="M10.5 1.875a1.125 1.125 0 0 1 2.25 0v.375h3.375A2.625 2.625 0 0 1 18.75 4.875v13.5A2.625 2.625 0 0 1 16.125 21H7.875A2.625 2.625 0 0 1 5.25 18.375V4.875A2.625 2.625 0 0 1 7.875 2.25H11.25v-.375ZM8.625 7.875a.75.75 0 0 0 0 1.5h6.75a.75.75 0 0 0 0-1.5h-6.75Z" />
                 </svg>
@@ -289,8 +279,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
             </div>
 
             {/* Section 3: Customer Details */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                 </svg>
@@ -327,8 +317,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
             </div>
 
             {/* Section 4: Payment Method */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
-              <h2 className="font-poppins flex items-center gap-2 text-base font-semibold text-gray-900 mb-5">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
                   <path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" />
                   <path fillRule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clipRule="evenodd" />
