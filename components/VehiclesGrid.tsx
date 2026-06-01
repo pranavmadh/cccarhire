@@ -145,40 +145,29 @@ export default function VehiclesGrid() {
             {filtered.map((vehicle) => (
               <article
                 key={vehicle.id}
-                className="rounded-3xl bg-white shadow-md ring-1 ring-gray-100 transition-shadow hover:shadow-lg"
+                className="overflow-hidden rounded-3xl bg-white shadow-md ring-1 ring-gray-100 transition-shadow hover:shadow-lg"
               >
-                {/* Top row: Popular badge + heart */}
-                <div className="flex items-center justify-between px-4 pt-4">
-                  {vehicle.popular ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-brand-blue">
-                      <StarIcon className="h-3 w-3" />
-                      Popular
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                  <button
-                    type="button"
-                    aria-label="Save to wishlist"
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition-colors hover:text-red-400"
-                  >
-                    <HeartIcon className="h-4 w-4" />
-                  </button>
-                </div>
-
                 {/* Car image */}
-                <div className="relative mx-4 h-44">
+                <div className="relative h-48 w-full">
                   <Image
                     src={vehicle.image}
                     alt={vehicle.name}
                     fill
-                    className="object-contain"
+                    className="object-cover"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
+                  {vehicle.popular && (
+                    <div className="absolute left-3 top-3">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-brand-blue">
+                        <StarIcon className="h-3 w-3" />
+                        Popular
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Info */}
-                <div className="px-4 pb-4">
+                <div className="px-4 pb-4 pt-4">
                   <h2 className="font-poppins text-lg font-bold text-gray-900">{vehicle.name}</h2>
                   <p className="text-sm text-gray-400">{vehicle.type}</p>
 
