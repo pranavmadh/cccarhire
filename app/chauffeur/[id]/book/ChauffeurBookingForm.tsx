@@ -390,7 +390,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
                       <span className="mt-1 inline-block rounded-full bg-brand-blue/10 px-2 py-0.5 text-xs font-medium text-brand-blue">With Chauffeur</span>
                       <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
                         <span>{car.passengers} passengers</span>
-                        <span>· Fuel included</span>
                       </div>
                     </div>
                   </div>

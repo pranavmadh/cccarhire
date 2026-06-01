@@ -29,12 +29,14 @@ export default function AdminChauffeurPage() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [removeLoadingId, setRemoveLoadingId] = useState<string | null>(null);
+  const [editingCar, setEditingCar] = useState<ChauffeurCar | null>(null);
 
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainPreview, setMainPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const adminSecretRef = useRef<HTMLInputElement>(null);
+  const formTopRef = useRef<HTMLDivElement>(null);
   const [formKey, setFormKey] = useState(0);
 
   const loadCars = useCallback(async () => {
@@ -51,7 +53,7 @@ export default function AdminChauffeurPage() {
   useEffect(() => { loadCars(); }, [loadCars]);
 
   function applyFile(file: File) {
-    if (mainPreview) URL.revokeObjectURL(mainPreview);
+    if (mainPreview?.startsWith("blob:")) URL.revokeObjectURL(mainPreview);
     setMainImage(file);
     setMainPreview(URL.createObjectURL(file));
   }
@@ -66,7 +68,7 @@ export default function AdminChauffeurPage() {
     if (f && f.type.startsWith("image/")) applyFile(f);
   }
   function removeImage() {
-    if (mainPreview) URL.revokeObjectURL(mainPreview);
+    if (mainPreview?.startsWith("blob:")) URL.revokeObjectURL(mainPreview);
     setMainImage(null);
     setMainPreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -74,29 +76,52 @@ export default function AdminChauffeurPage() {
 
   function resetForm() {
     setFormKey((k) => k + 1);
+    setEditingCar(null);
     removeImage();
     setMessage(null);
   }
 
+  function startEdit(car: ChauffeurCar) {
+    if (mainPreview?.startsWith("blob:")) URL.revokeObjectURL(mainPreview);
+    setEditingCar(car);
+    setMainImage(null);
+    setMainPreview(car.image);
+    setMessage(null);
+    setFormKey((k) => k + 1);
+    formTopRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
   async function doSubmit(form: HTMLFormElement): Promise<boolean> {
-    if (!mainImage) { setMessage({ type: "error", text: "Please upload a car image." }); return false; }
+    if (!mainImage && !editingCar) {
+      setMessage({ type: "error", text: "Please upload a car image." });
+      return false;
+    }
     setSubmitting(true);
     setMessage(null);
 
     const fd = new FormData(form);
     fd.delete("image");
-    fd.append("image", mainImage);
+    if (mainImage) fd.append("image", mainImage);
 
     const secret = adminSecretRef.current?.value ?? "";
     const headers: HeadersInit = {};
     if (secret) headers["x-admin-secret"] = secret;
 
+    const url = editingCar ? `/api/chauffeur/${editingCar.id}` : "/api/chauffeur";
+    const method = editingCar ? "PATCH" : "POST";
+
     try {
-      const res = await fetch("/api/chauffeur", { method: "POST", body: fd, headers });
+      const res = await fetch(url, { method, body: fd, headers });
       const data = await res.json();
-      if (!res.ok) { setMessage({ type: "error", text: data.error ?? "Failed to add car" }); return false; }
-      setMessage({ type: "success", text: `${data.car.name} added successfully!` });
+      if (!res.ok) { setMessage({ type: "error", text: data.error ?? "Failed to save car" }); return false; }
+      setMessage({
+        type: "success",
+        text: editingCar
+          ? `${data.car.name} updated successfully!`
+          : `${data.car.name} added successfully!`,
+      });
       await loadCars();
+      if (editingCar) resetForm();
       return true;
     } catch {
       setMessage({ type: "error", text: "Network error. Please try again." });
@@ -129,6 +154,7 @@ export default function AdminChauffeurPage() {
       if (res.ok) {
         setCars((prev) => prev.filter((c) => c.id !== id));
         setMessage({ type: "success", text: "Car removed successfully." });
+        if (editingCar?.id === id) resetForm();
       } else {
         const data = await res.json();
         setMessage({ type: "error", text: data.error ?? "Failed to remove car" });
@@ -140,6 +166,8 @@ export default function AdminChauffeurPage() {
       setDeletingId(null);
     }
   }
+
+  const ec = editingCar;
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
@@ -154,7 +182,9 @@ export default function AdminChauffeurPage() {
               </svg>
             </button>
             <div>
-              <h1 className="font-poppins text-lg font-bold text-gray-900 leading-tight">Add Chauffeur Car</h1>
+              <h1 className="font-poppins text-lg font-bold text-gray-900 leading-tight">
+                {ec ? `Editing: ${ec.name}` : "Add Chauffeur Car"}
+              </h1>
               <nav className="flex items-center gap-1 text-xs text-gray-400">
                 <Link href="/admin" className="hover:text-brand-blue">Admin</Link>
                 <span>›</span>
@@ -187,7 +217,22 @@ export default function AdminChauffeurPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8" ref={formTopRef}>
+
+        {/* Edit mode banner */}
+        {ec && (
+          <div className="mb-6 flex items-center justify-between gap-3 rounded-xl bg-brand-blue/5 px-4 py-3 ring-1 ring-brand-blue/20">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
+                <path d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z" />
+              </svg>
+              Editing <span className="font-semibold">{ec.name}</span> — changes will overwrite the existing record.
+            </div>
+            <button onClick={resetForm} className="text-xs font-medium text-gray-500 hover:text-gray-800 shrink-0">
+              Cancel edit
+            </button>
+          </div>
+        )}
 
         {/* Status message */}
         {message && (
@@ -216,11 +261,11 @@ export default function AdminChauffeurPage() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="sm:col-span-2">
                     <label className={labelCls}>Car Name <span className="text-red-500">*</span></label>
-                    <input name="name" required placeholder="e.g. Nissan Qashqai" className={inputCls} />
+                    <input name="name" required placeholder="e.g. Nissan Qashqai" className={inputCls} defaultValue={ec?.name ?? ""} />
                   </div>
                   <div>
                     <label className={labelCls}>Passengers <span className="text-red-500">*</span></label>
-                    <select name="passengers" required defaultValue="" className={selectCls}>
+                    <select name="passengers" required defaultValue={ec ? String(ec.passengers) : ""} className={selectCls}>
                       <option value="" disabled>Select Passengers</option>
                       {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((n) => (
                         <option key={n} value={n}>{n} {n === 1 ? "passenger" : "passengers"}</option>
@@ -231,7 +276,7 @@ export default function AdminChauffeurPage() {
                     <label className={labelCls}>Daily Price (EUR) <span className="text-red-500">*</span></label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
-                      <input name="price" type="number" min={1} step={1} required placeholder="100" className={inputCls + " pl-7"} />
+                      <input name="price" type="number" min={1} step={1} required placeholder="100" className={inputCls + " pl-7"} defaultValue={ec?.price ?? ""} />
                     </div>
                   </div>
                 </div>
@@ -260,19 +305,21 @@ export default function AdminChauffeurPage() {
                     <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
                     <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
                   </svg>
-                  {submitting ? "Saving…" : "Save Car"}
+                  {submitting ? "Saving…" : ec ? "Update Car" : "Save Car"}
                 </button>
-                <button
-                  type="button"
-                  disabled={submitting}
-                  onClick={handleSaveAndAdd}
-                  className="inline-flex items-center gap-2 rounded-lg border border-brand-blue bg-white px-5 py-2.5 text-sm font-semibold text-brand-blue hover:bg-brand-blue/5 transition-colors disabled:opacity-60"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
-                    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                  </svg>
-                  Save &amp; Add Another
-                </button>
+                {!ec && (
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    onClick={handleSaveAndAdd}
+                    className="inline-flex items-center gap-2 rounded-lg border border-brand-blue bg-white px-5 py-2.5 text-sm font-semibold text-brand-blue hover:bg-brand-blue/5 transition-colors disabled:opacity-60"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
+                      <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                    </svg>
+                    Save &amp; Add Another
+                  </button>
+                )}
               </div>
             </div>
 
@@ -303,6 +350,11 @@ export default function AdminChauffeurPage() {
                   <div className="relative overflow-hidden rounded-xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={mainPreview} alt="Preview" className="aspect-video w-full object-cover" />
+                    {ec && !mainImage && (
+                      <div className="absolute left-2 top-2 rounded-md bg-black/60 px-2 py-1 text-xs text-white">
+                        Current image — upload new to replace
+                      </div>
+                    )}
                     <button type="button" onClick={removeImage} className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80" aria-label="Remove image">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
                         <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
@@ -348,7 +400,7 @@ export default function AdminChauffeurPage() {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {cars.map((car) => (
-                <div key={car.id} className="relative flex items-center gap-4 rounded-2xl bg-white p-4 ring-1 ring-gray-100 shadow-sm">
+                <div key={car.id} className={`relative flex items-center gap-4 rounded-2xl bg-white p-4 ring-1 shadow-sm transition-shadow ${editingCar?.id === car.id ? "ring-brand-blue shadow-md" : "ring-gray-100"}`}>
                   {deletingId === car.id ? (
                     <div className="flex flex-1 flex-col items-center justify-center gap-3 py-2 text-center">
                       <p className="text-sm font-semibold text-gray-800">Remove <span className="text-red-600">{car.name}</span>?</p>
@@ -369,18 +421,31 @@ export default function AdminChauffeurPage() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="font-poppins text-sm font-semibold text-gray-900 truncate">{car.name}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{car.passengers} passengers · Fuel included</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{car.passengers} passengers</p>
                         <p className="text-sm font-bold text-brand-blue mt-1">€{car.price}/day</p>
                       </div>
-                      <button
-                        onClick={() => setDeletingId(car.id)}
-                        title="Remove car"
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
-                          <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
-                        </svg>
-                      </button>
+                      <div className="flex shrink-0 flex-col items-end gap-1.5">
+                        <div className="flex gap-1">
+                          <button
+                            onClick={() => startEdit(car)}
+                            title="Edit car"
+                            className="flex h-7 w-7 items-center justify-center rounded-lg border border-brand-blue/20 bg-brand-blue/5 text-brand-blue hover:bg-brand-blue/10 transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
+                              <path d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => setDeletingId(car.id)}
+                            title="Remove car"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
+                              <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </>
                   )}
                 </div>

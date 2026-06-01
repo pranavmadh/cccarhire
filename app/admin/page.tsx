@@ -139,9 +139,6 @@ export default async function AdminDashboardPage() {
               <span className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-blue">
                 {chauffeurCars.length} cars
               </span>
-              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                Fuel included
-              </span>
             </div>
           </Link>
 

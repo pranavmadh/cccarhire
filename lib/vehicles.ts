@@ -1,139 +1,29 @@
-import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
-import type { CreateVehicleInput, Vehicle } from "./types/vehicle";
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const DATA_FILE = path.join(DATA_DIR, "vehicles.json");
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "vehicles");
-
-const SEED_VEHICLES: Vehicle[] = [
-  {
-    id: "suzuki-swift",
-    name: "Suzuki Swift",
-    type: "Compact",
-    category: "compact",
-    modelYear: 2023,
-    seats: 5,
-    luggage: 1,
-    transmission: "Automatic",
-    airConditioning: true,
-    price: 45,
-    discountedPrice: 40,
-    discountedMinDays: 5,
-    fuelConsumption: "4/4.5L per 100km",
-    features: ["Radio", "Bluetooth", "USB", "AUX", "Power Steering", "Power Windows"],
-    image: "/hero_image4.png",
-    popular: false,
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-  {
-    id: "suzuki-dzire",
-    name: "Suzuki Dzire",
-    type: "Hatchback",
-    category: "hatchback",
-    modelYear: 2022,
-    seats: 5,
-    luggage: 2,
-    transmission: "Automatic",
-    airConditioning: true,
-    price: 50,
-    discountedPrice: 45,
-    discountedMinDays: 4,
-    fuelConsumption: "4/4.5L per 100km",
-    features: ["Radio", "Bluetooth", "USB", "AUX", "Power Steering", "Power Windows"],
-    image: "/hero_image3.png",
-    popular: false,
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-  {
-    id: "suzuki-fronx",
-    name: "Suzuki Fronx",
-    type: "SUV",
-    category: "suv",
-    modelYear: 2025,
-    seats: 5,
-    luggage: 2,
-    transmission: "Automatic",
-    airConditioning: true,
-    price: 55,
-    discountedPrice: 50,
-    discountedMinDays: 4,
-    fuelConsumption: "4.9L per 100km",
-    features: ["Radio", "Bluetooth", "USB", "AUX", "Power Steering", "Power Windows"],
-    image: "/hero_image2.png",
-    popular: true,
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-  {
-    id: "suzuki-brezza",
-    name: "Suzuki Brezza",
-    type: "SUV",
-    category: "suv",
-    modelYear: 2025,
-    seats: 5,
-    luggage: 2,
-    transmission: "Automatic",
-    airConditioning: true,
-    price: 65,
-    discountedPrice: 60,
-    discountedMinDays: 3,
-    fuelConsumption: "4/5L per 100km",
-    features: ["Radio", "Bluetooth", "USB", "AUX", "Power Steering", "Power Windows"],
-    image: "/hero_image.png",
-    popular: false,
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-  {
-    id: "suzuki-ertiga",
-    name: "Suzuki Ertiga (7 Seater)",
-    type: "MPV",
-    category: "suv",
-    modelYear: 2024,
-    seats: 7,
-    luggage: 2,
-    transmission: "Automatic",
-    airConditioning: true,
-    price: 70,
-    discountedPrice: 65,
-    discountedMinDays: 3,
-    fuelConsumption: "4.9/5L per 100km",
-    features: ["Radio", "Bluetooth", "USB", "AUX", "Power Steering", "Power Windows"],
-    image: "/hero_image3.png",
-    popular: false,
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-];
-
-async function ensureDataFile(): Promise<void> {
-  await mkdir(DATA_DIR, { recursive: true });
-  try {
-    await readFile(DATA_FILE, "utf-8");
-  } catch {
-    await writeFile(DATA_FILE, JSON.stringify(SEED_VEHICLES, null, 2), "utf-8");
-  }
-}
+import { supabase } from "./supabase";
+import type { CreateVehicleInput, Transmission, Vehicle, VehicleCategory } from "./types/vehicle";
 
 export async function getAllVehicles(): Promise<Vehicle[]> {
-  await ensureDataFile();
-  const raw = await readFile(DATA_FILE, "utf-8");
-  const vehicles = JSON.parse(raw) as Vehicle[];
-  return vehicles.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  const { data, error } = await supabase
+    .from("vehicles")
+    .select("*")
+    .order("createdAt", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Vehicle[];
 }
 
 export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
-  await ensureDataFile();
-  const vehicles = await getAllVehicles();
-
   const slug = input.name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
   let id = slug || `vehicle-${Date.now()}`;
-  if (vehicles.some((v) => v.id === id)) {
-    id = `${id}-${Date.now()}`;
-  }
+
+  const { data: existing } = await supabase
+    .from("vehicles")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+  if (existing) id = `${id}-${Date.now()}`;
 
   const vehicle: Vehicle = {
     id,
@@ -146,7 +36,7 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     transmission: input.transmission,
     airConditioning: input.airConditioning,
     fuelConsumption: input.fuelConsumption,
-    features: input.features,
+    features: input.features ?? [],
     price: input.price,
     discountedPrice: input.discountedPrice,
     discountedMinDays: input.discountedMinDays,
@@ -155,37 +45,83 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     createdAt: new Date().toISOString(),
   };
 
-  vehicles.unshift(vehicle);
-  await writeFile(DATA_FILE, JSON.stringify(vehicles, null, 2), "utf-8");
+  const { error } = await supabase.from("vehicles").insert(vehicle);
+  if (error) throw new Error(error.message);
   return vehicle;
 }
 
 export async function saveUploadedImage(file: File): Promise<string> {
-  await mkdir(UPLOAD_DIR, { recursive: true });
-
   const ext = path.extname(file.name).toLowerCase() || ".jpg";
   const allowed = [".jpg", ".jpeg", ".png", ".webp"];
-  if (!allowed.includes(ext)) {
-    throw new Error("Image must be JPG, PNG, or WebP");
-  }
+  if (!allowed.includes(ext)) throw new Error("Image must be JPG, PNG, or WebP");
 
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}${ext}`;
-  const filepath = path.join(UPLOAD_DIR, filename);
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(filepath, buffer);
 
-  return `/uploads/vehicles/${filename}`;
+  const { error } = await supabase.storage
+    .from("vehicle-images")
+    .upload(filename, buffer, { contentType: file.type });
+  if (error) throw new Error(error.message);
+
+  const { data } = supabase.storage.from("vehicle-images").getPublicUrl(filename);
+  return data.publicUrl;
+}
+
+export async function updateVehicle(
+  id: string,
+  input: {
+    name?: string;
+    type?: string;
+    category?: VehicleCategory;
+    modelYear?: number | null;
+    seats?: number;
+    luggage?: number | null;
+    transmission?: Transmission;
+    airConditioning?: boolean;
+    fuelConsumption?: string | null;
+    features?: string[];
+    price?: number;
+    discountedPrice?: number | null;
+    discountedMinDays?: number | null;
+    popular?: boolean;
+    imagePath?: string;
+  }
+): Promise<Vehicle> {
+  const updates: Record<string, unknown> = {};
+  if (input.name !== undefined) updates.name = input.name;
+  if (input.type !== undefined) updates.type = input.type;
+  if (input.category !== undefined) updates.category = input.category;
+  if ("modelYear" in input) updates.modelYear = input.modelYear;
+  if (input.seats !== undefined) updates.seats = input.seats;
+  if ("luggage" in input) updates.luggage = input.luggage;
+  if (input.transmission !== undefined) updates.transmission = input.transmission;
+  if (input.airConditioning !== undefined) updates.airConditioning = input.airConditioning;
+  if ("fuelConsumption" in input) updates.fuelConsumption = input.fuelConsumption;
+  if (input.features !== undefined) updates.features = input.features;
+  if (input.price !== undefined) updates.price = input.price;
+  if ("discountedPrice" in input) updates.discountedPrice = input.discountedPrice;
+  if ("discountedMinDays" in input) updates.discountedMinDays = input.discountedMinDays;
+  if (input.popular !== undefined) updates.popular = input.popular;
+  if (input.imagePath !== undefined) updates.image = input.imagePath;
+
+  const { data, error } = await supabase
+    .from("vehicles")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as Vehicle;
 }
 
 export async function removeVehicle(id: string): Promise<boolean> {
-  await ensureDataFile();
-  const raw = await readFile(DATA_FILE, "utf-8");
-  const vehicles = JSON.parse(raw) as Vehicle[];
-  const index = vehicles.findIndex((v) => v.id === id);
-  if (index === -1) return false;
-  vehicles.splice(index, 1);
-  await writeFile(DATA_FILE, JSON.stringify(vehicles, null, 2), "utf-8");
-  return true;
+  const { data, error } = await supabase
+    .from("vehicles")
+    .delete()
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error(error.message);
+  return (data?.length ?? 0) > 0;
 }
 
 export function slugifyId(name: string): string {

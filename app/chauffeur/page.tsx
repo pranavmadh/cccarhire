@@ -8,7 +8,7 @@ import { getAllChauffeurCars } from "@/lib/chauffeur-cars";
 export const metadata: Metadata = {
   title: "Chauffeur Service | CC Carhire Praslin",
   description:
-    "Explore Praslin Island in comfort with our professional chauffeur service. Full day tours with fuel included — sit back and enjoy the sights.",
+    "Explore Praslin Island in comfort with our professional chauffeur service. Full day tours — sit back and enjoy the sights.",
 };
 
 function SnowflakeIcon() {

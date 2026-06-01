@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!car) return {};
   return {
     title: `Book ${car.name} with Chauffeur | CC Carhire Praslin`,
-    description: `Book the ${car.name} chauffeur service in Praslin, Seychelles from €${car.price}/day. Fuel included, professional driver.`,
+    description: `Book the ${car.name} chauffeur service in Praslin, Seychelles from €${car.price}/day. Professional driver included.`,
   };
 }
 
