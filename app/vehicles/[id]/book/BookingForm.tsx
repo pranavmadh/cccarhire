@@ -51,10 +51,11 @@ function addDays(dateStr: string, n: number) {
   d.setDate(d.getDate() + n);
   return d.toISOString().split('T')[0];
 }
-function diffDays(from: string, to: string) {
-  const a = new Date(from + 'T00:00:00').getTime();
-  const b = new Date(to + 'T00:00:00').getTime();
-  return Math.max(1, Math.round((b - a) / 86400000));
+function diffDays(fromDate: string, fromTime: string, toDate: string, toTime: string) {
+  const a = new Date(`${fromDate}T${fromTime}`).getTime();
+  const b = new Date(`${toDate}T${toTime}`).getTime();
+  const hours = (b - a) / 3600000;
+  return Math.max(1, Math.ceil(hours / 24));
 }
 function fmtDate(dateStr: string) {
   if (!dateStr) return '';
@@ -86,7 +87,7 @@ export default function BookingForm({ vehicle }: Props) {
   const [pickupDate, setPickupDate] = useState(initPickupDate);
   const [pickupTime, setPickupTime] = useState('10:00');
   const [returnDate, setReturnDate] = useState(initDropoffDate);
-  const [returnTime, setReturnTime] = useState('17:25');
+  const [returnTime, setReturnTime] = useState('10:00');
   const [pickupFlight, setPickupFlight] = useState('');
   const [returnFlight, setReturnFlight] = useState('');
 
@@ -113,7 +114,7 @@ export default function BookingForm({ vehicle }: Props) {
   const [payment, setPayment] = useState<'arrival' | 'card'>('arrival');
 
   /* ── Price calculation ── */
-  const duration = useMemo(() => diffDays(pickupDate, returnDate), [pickupDate, returnDate]);
+  const duration = useMemo(() => diffDays(pickupDate, pickupTime, returnDate, returnTime), [pickupDate, pickupTime, returnDate, returnTime]);
   const hasDiscount =
     !!vehicle.discountedPrice &&
     !!vehicle.discountedMinDays &&
@@ -304,7 +305,7 @@ export default function BookingForm({ vehicle }: Props) {
                     <input
                       type="time"
                       value={pickupTime}
-                      onChange={(e) => setPickupTime(e.target.value)}
+                      onChange={(e) => { setPickupTime(e.target.value); setReturnTime(e.target.value); }}
                       className={inputCls + ' sm:pl-9'}
                     />
                   </div>
@@ -751,6 +752,9 @@ export default function BookingForm({ vehicle }: Props) {
                       <span className="text-sm font-bold text-gray-800">{duration} {duration === 1 ? 'Day' : 'Days'}</span>
                     </div>
                   </div>
+                  <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700 ring-1 ring-amber-100">
+                    Each day is exactly 24 hours from pickup time (e.g. 10:00 AM → 10:00 AM next day). Returning even 1 hour late incurs a full extra day charge.
+                  </p>
                 </div>
 
                 {/* Price breakdown */}
