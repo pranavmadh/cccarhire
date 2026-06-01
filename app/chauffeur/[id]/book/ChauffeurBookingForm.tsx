@@ -259,10 +259,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
                 {/* Baby Seat */}
                 <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-blue/8">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-7 w-7 text-brand-blue" aria-hidden>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                      </svg>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
+                      <Image src="/Baby_Seat.png" alt="Baby Seat" fill className="object-cover" sizes="56px" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-900">Baby Seat</p>
@@ -280,10 +278,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
                 {/* Child Booster */}
                 <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-blue/8">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-7 w-7 text-brand-blue" aria-hidden>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                      </svg>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
+                      <Image src="/Child_Booster_Seat.png" alt="Child Booster Seat" fill className="object-cover" sizes="56px" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-900">Child Booster Seat</p>
@@ -301,10 +297,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
                 {/* Second Driver */}
                 <div className={`flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${addDriver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
                   <div className="flex items-start gap-3">
-                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${addDriver ? 'bg-green-100' : 'bg-brand-blue/8'}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`h-7 w-7 ${addDriver ? 'text-green-600' : 'text-brand-blue'}`} aria-hidden>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                      </svg>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
+                      <Image src="/Second_Driver.png" alt="Second Driver" fill className="object-cover" sizes="56px" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-900">Second Driver</p>
@@ -323,10 +317,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
                 {/* Tyre Waiver */}
                 <div className={`flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${tyreWaiver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
                   <div className="flex items-start gap-3">
-                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${tyreWaiver ? 'bg-green-100' : 'bg-brand-blue/8'}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`h-7 w-7 ${tyreWaiver ? 'text-green-600' : 'text-brand-blue'}`} aria-hidden>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a9 9 0 0 0 9-9M12 3a9 9 0 0 1 9 9m-9 9V3m0 18a9 9 0 0 1-9-9m9 9H3m9-18a9 9 0 0 0-9 9" />
-                      </svg>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
+                      <Image src="/Tyre_Waiver.png" alt="Tyre Waiver" fill className="object-cover" sizes="56px" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-900">Tyre Waiver</p>
@@ -342,10 +334,8 @@ export default function ChauffeurBookingForm({ car }: Props) {
                 {/* Windscreen Waiver */}
                 <div className={`col-span-2 sm:col-span-1 flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${windscreenWaiver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
                   <div className="flex items-start gap-3">
-                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${windscreenWaiver ? 'bg-green-100' : 'bg-brand-blue/8'}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`h-7 w-7 ${windscreenWaiver ? 'text-green-600' : 'text-brand-blue'}`} aria-hidden>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                      </svg>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
+                      <Image src="/Windscreen_Waiver.png" alt="Windscreen Waiver" fill className="object-cover" sizes="56px" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-900">Windscreen Waiver</p>
