@@ -86,7 +86,7 @@ const benefits = [
   {
     number: "07",
     title: "Baby Car Seat and Booster",
-    description: "Baby car seats and boosters available for only €10.",
+    description: "Baby car seats and boosters available for only €5 per trip.",
     icon: (
       <>
         <path d="M8 10h8l-1-4H9l-1 4Z" />

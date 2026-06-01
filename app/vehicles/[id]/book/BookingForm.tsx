@@ -76,7 +76,6 @@ export default function BookingForm({ vehicle }: Props) {
   /* Section 1 */
   const [pickupLoc, setPickupLoc] = useState(initLocation);
   const [returnLoc, setReturnLoc] = useState(initLocation);
-  const [sameLoc, setSameLoc] = useState(true);
   const [pickupDate, setPickupDate] = useState(initPickupDate);
   const [pickupTime, setPickupTime] = useState('10:00');
   const [returnDate, setReturnDate] = useState(initDropoffDate);
@@ -121,11 +120,6 @@ export default function BookingForm({ vehicle }: Props) {
 
   const handlePickupLocChange = (v: string) => {
     setPickupLoc(v);
-    if (sameLoc) setReturnLoc(v);
-  };
-  const handleSameLocChange = (checked: boolean) => {
-    setSameLoc(checked);
-    if (checked) setReturnLoc(pickupLoc);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
@@ -254,23 +248,14 @@ export default function BookingForm({ vehicle }: Props) {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-600 mb-1.5 block">Return Location</label>
-                  <label className="flex items-center gap-2 cursor-pointer select-none mb-2 w-fit rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
-                    <input
-                      type="checkbox"
-                      checked={sameLoc}
-                      onChange={(e) => handleSameLocChange(e.target.checked)}
-                      className="h-4 w-4 rounded border-gray-300 text-brand-blue accent-brand-blue"
-                    />
-                    <span className="text-xs font-medium text-gray-600">{sameLoc ? "Same as pickup" : "Reset to pickup"}</span>
-                  </label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Return Location</label>
                   <div className="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-blue hidden sm:block" aria-hidden>
                       <path fillRule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .988.55l.078.041.019.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clipRule="evenodd" />
                     </svg>
                     <select
                       value={returnLoc}
-                      onChange={(e) => { setReturnLoc(e.target.value); setSameLoc(false); }}
+                      onChange={(e) => setReturnLoc(e.target.value)}
                       className={selectCls + ' sm:pl-9'}
                     >
                       {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
