@@ -52,8 +52,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
   const [babySeat, setBabySeat] = useState(0);
   const [childBooster, setChildBooster] = useState(0);
   const [addDriver, setAddDriver] = useState(false);
-  const [tyreWaiver, setTyreWaiver] = useState(false);
-  const [windscreenWaiver, setWindscreenWaiver] = useState(false);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -67,7 +65,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
 
   const duration = useMemo(() => diffDays(startDate, endDate), [startDate, endDate]);
   const subtotal = car.price * duration;
-  const extrasTotal = babySeat * 5 + childBooster * 5 + (tyreWaiver ? 5 * duration : 0) + (windscreenWaiver ? 5 * duration : 0);
+  const extrasTotal = babySeat * 5 + childBooster * 5;
   const total = subtotal + extrasTotal;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -84,8 +82,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
     if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
     if (childBooster > 0) extraLines.push(`  • Child Booster x${childBooster}: €${fmt2(childBooster * 5)}`);
     if (addDriver) extraLines.push(`  • Second Driver: Free`);
-    if (tyreWaiver) extraLines.push(`  • Tyre Waiver: €${fmt2(5 * duration)}`);
-    if (windscreenWaiver) extraLines.push(`  • Windscreen Waiver: €${fmt2(5 * duration)}`);
     if (extraLines.length === 0) extraLines.push('  None');
 
     const lines = [
@@ -314,39 +310,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
                   </button>
                 </div>
 
-                {/* Tyre Waiver */}
-                <div className={`flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${tyreWaiver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
-                      <Image src="/Tyre_Waiver.png" alt="Tyre Waiver" fill className="object-cover" sizes="56px" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">Tyre Waiver</p>
-                      <p className="mt-1 text-xs text-gray-500">Protects against puncture or tyre damage costs.</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€5.00 / Day</p>
-                    </div>
-                  </div>
-                  <button type="button" onClick={() => setTyreWaiver(!tyreWaiver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${tyreWaiver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
-                    {tyreWaiver ? '✓ Added' : '+ Add Protection'}
-                  </button>
-                </div>
-
-                {/* Windscreen Waiver */}
-                <div className={`col-span-2 sm:col-span-1 flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${windscreenWaiver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
-                      <Image src="/Windscreen_Waiver.png" alt="Windscreen Waiver" fill className="object-cover" sizes="56px" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">Windscreen Waiver</p>
-                      <p className="mt-1 text-xs text-gray-500">Covers repair or replacement of windscreen damage.</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€5.00 / Day</p>
-                    </div>
-                  </div>
-                  <button type="button" onClick={() => setWindscreenWaiver(!windscreenWaiver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${windscreenWaiver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
-                    {windscreenWaiver ? '✓ Added' : '+ Add Protection'}
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -492,7 +455,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
                   </div>
                 </div>
 
-                {(extrasTotal > 0 || addDriver || tyreWaiver || windscreenWaiver) && (
+                {(extrasTotal > 0 || addDriver) && (
                   <div className="px-5 py-4 border-b border-gray-100 space-y-2 text-sm">
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Extras</p>
                     {babySeat > 0 && (
@@ -511,18 +474,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
                       <div className="flex justify-between text-gray-700">
                         <span>Second Driver</span>
                         <span className="font-medium text-green-600">Free</span>
-                      </div>
-                    )}
-                    {tyreWaiver && (
-                      <div className="flex justify-between text-gray-700">
-                        <span>Tyre Waiver</span>
-                        <span className="font-medium">€{fmt2(5 * duration)}</span>
-                      </div>
-                    )}
-                    {windscreenWaiver && (
-                      <div className="flex justify-between text-gray-700">
-                        <span>Windscreen Waiver</span>
-                        <span className="font-medium">€{fmt2(5 * duration)}</span>
                       </div>
                     )}
                   </div>

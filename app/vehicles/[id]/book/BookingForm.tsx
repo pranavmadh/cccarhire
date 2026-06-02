@@ -31,14 +31,14 @@ const INSURANCE_OPTIONS = [
     label: 'Reduced Excess 800',
     badge: null,
     desc: 'Reduce excess to EUR 800\nfor added peace of mind',
-    pricePerDay: 6,
+    pricePerDay: 10,
   },
   {
     id: 'reduced' as const,
     label: 'Reduced Excess 500',
     badge: null,
     desc: 'Reduce excess to EUR 500\nfor extra peace of mind',
-    pricePerDay: 10,
+    pricePerDay: 15,
   },
 ];
 
@@ -99,7 +99,6 @@ export default function BookingForm({ vehicle }: Props) {
   const [childBooster, setChildBooster] = useState(0);
   const [addDriver, setAddDriver] = useState(false);
   const [tyreWaiver, setTyreWaiver] = useState(false);
-  const [windscreenWaiver, setWindscreenWaiver] = useState(false);
 
   /* Section 5 */
   const [fullName, setFullName] = useState('');
@@ -123,7 +122,7 @@ export default function BookingForm({ vehicle }: Props) {
   const subtotal = ratePerDay * duration;
   const insPerDay = INSURANCE_OPTIONS.find((o) => o.id === insurance)!.pricePerDay;
   const insTotal = insPerDay * duration;
-  const extrasDaily = babySeat * 5 + childBooster * 5 + (tyreWaiver ? 5 * duration : 0) + (windscreenWaiver ? 5 * duration : 0);
+  const extrasDaily = babySeat * 5 + childBooster * 5 + (tyreWaiver ? 10 * duration : 0);
   const total = subtotal + insTotal + extrasDaily;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -142,8 +141,7 @@ export default function BookingForm({ vehicle }: Props) {
     if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
     if (childBooster > 0) extraLines.push(`  • Child Booster Seat x${childBooster}: €${fmt2(childBooster * 5)}`);
     if (addDriver) extraLines.push(`  • Second Driver: Free`);
-    if (tyreWaiver) extraLines.push(`  • Tyre Waiver: €${fmt2(5 * duration)}`);
-    if (windscreenWaiver) extraLines.push(`  • Windscreen Waiver: €${fmt2(5 * duration)}`);
+    if (tyreWaiver) extraLines.push(`  • Tyre Waiver: €${fmt2(10 * duration)}`);
     if (extraLines.length === 0) extraLines.push('  None');
 
     const lines = [
@@ -510,28 +508,11 @@ export default function BookingForm({ vehicle }: Props) {
                     <div>
                       <p className="text-sm font-bold text-gray-900">Tyre Waiver</p>
                       <p className="mt-1 text-xs text-gray-500">Protects against puncture or tyre damage costs.</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€5.00 / Day</p>
+                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€10.00 / Day</p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setTyreWaiver(!tyreWaiver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${tyreWaiver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
                     {tyreWaiver ? '✓ Added' : '+ Add Protection'}
-                  </button>
-                </div>
-
-                {/* Windscreen Waiver */}
-                <div className={`col-span-2 sm:col-span-1 flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${windscreenWaiver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
-                      <Image src="/Windscreen_Waiver.png" alt="Windscreen Waiver" fill className="object-cover" sizes="56px" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">Windscreen Waiver</p>
-                      <p className="mt-1 text-xs text-gray-500">Covers repair or replacement of windscreen damage.</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€5.00 / Day</p>
-                    </div>
-                  </div>
-                  <button type="button" onClick={() => setWindscreenWaiver(!windscreenWaiver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${windscreenWaiver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
-                    {windscreenWaiver ? '✓ Added' : '+ Add Protection'}
                   </button>
                 </div>
 
@@ -752,9 +733,6 @@ export default function BookingForm({ vehicle }: Props) {
                       <span className="text-sm font-bold text-gray-800">{duration} {duration === 1 ? 'Day' : 'Days'}</span>
                     </div>
                   </div>
-                  <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700 ring-1 ring-amber-100">
-                    Each day is exactly 24 hours from pickup time (e.g. 10:00 AM → 10:00 AM next day). Returning even 1 hour late incurs a full extra day charge.
-                  </p>
                 </div>
 
                 {/* Price breakdown */}
@@ -820,16 +798,10 @@ export default function BookingForm({ vehicle }: Props) {
                   {tyreWaiver && (
                     <div className="flex justify-between text-gray-700">
                       <span>Tyre Waiver</span>
-                      <span className="font-medium">€{fmt2(5 * duration)}</span>
+                      <span className="font-medium">€{fmt2(10 * duration)}</span>
                     </div>
                   )}
-                  {windscreenWaiver && (
-                    <div className="flex justify-between text-gray-700">
-                      <span>Windscreen Waiver</span>
-                      <span className="font-medium">€{fmt2(5 * duration)}</span>
-                    </div>
-                  )}
-                  {!babySeat && !childBooster && !addDriver && !tyreWaiver && !windscreenWaiver && (
+                  {!babySeat && !childBooster && !addDriver && !tyreWaiver && (
                     <p className="text-xs text-gray-400">No extras selected</p>
                   )}
                 </div>
