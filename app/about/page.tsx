@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "About Us | CC CarHire Praslin",
+  description: "Learn about CC CarHire Praslin — a locally owned car rental company in Amitie, Praslin Island, Seychelles. Trusted, affordable, and committed to your comfort.",
+  alternates: { canonical: "/about" },
+};
 
 const highlights = [
   "Local & Trusted Company",

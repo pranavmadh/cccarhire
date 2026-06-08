@@ -15,6 +15,7 @@ const LOCATIONS = [
   'Baie Sainte Anne',
   'La Réserve Hotel',
   'Lemuria Resort',
+  'Jetty',
   'Other Location',
 ];
 
@@ -108,6 +109,13 @@ export default function BookingForm({ vehicle }: Props) {
   const [whatsapp, setWhatsapp] = useState('');
   const [whatsappDial, setWhatsappDial] = useState('+248');
   const [driverAge, setDriverAge] = useState('30-65 years');
+  const [passengers, setPassengers] = useState(1);
+
+  /* License */
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [licensePreview, setLicensePreview] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   /* Section 6 */
   const [payment, setPayment] = useState<'arrival' | 'card'>('arrival');
@@ -131,8 +139,27 @@ export default function BookingForm({ vehicle }: Props) {
     setPickupLoc(v);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
     e.preventDefault();
+    setUploadError('');
+
+    let licenseUrl = '';
+    if (licenseFile) {
+      setUploading(true);
+      try {
+        const fd = new FormData();
+        fd.append('file', licenseFile);
+        const res = await fetch('/api/upload-license', { method: 'POST', body: fd });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? 'Upload failed');
+        licenseUrl = json.url;
+      } catch (err) {
+        setUploadError(err instanceof Error ? err.message : 'Upload failed');
+        setUploading(false);
+        return;
+      }
+      setUploading(false);
+    }
 
     const insLabel = INSURANCE_OPTIONS.find((o) => o.id === insurance)!.label;
     const paymentLabel = payment === 'arrival' ? 'Cash on Arrival' : 'Card on Arrival';
@@ -176,6 +203,8 @@ export default function BookingForm({ vehicle }: Props) {
       `  • Phone: ${phoneDial} ${phone || '—'}`,
       ...(whatsapp ? [`  • WhatsApp: ${whatsappDial} ${whatsapp}`] : []),
       `  • Driver Age: ${driverAge}`,
+      `  • Passengers: ${passengers}`,
+      ...(licenseUrl ? [`  • Driving License: ${licenseUrl}`] : []),
       ``,
       `💳 *Payment Method:* ${paymentLabel}`,
     ];
@@ -609,7 +638,71 @@ export default function BookingForm({ vehicle }: Props) {
                     ))}
                   </select>
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Number of Passengers</label>
+                  <select
+                    value={passengers}
+                    onChange={(e) => setPassengers(Number(e.target.value))}
+                    className={selectCls}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      <option key={n} value={n}>{n} {n === 1 ? 'Passenger' : 'Passengers'}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
+            </div>
+
+            {/* ── Driving License ── */}
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h2 className="font-poppins flex items-center gap-2 text-sm sm:text-base font-semibold text-gray-900 mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-brand-blue shrink-0" aria-hidden>
+                  <path fillRule="evenodd" d="M4.5 3.75A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V6a2.25 2.25 0 0 0-2.25-2.25h-15Zm0 1.5h15a.75.75 0 0 1 .75.75V7.5h-16.5V6a.75.75 0 0 1 .75-.75Zm-.75 4.5h16.5V18a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V9.75Zm3 2.25a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Zm0 3a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5Z" clipRule="evenodd" />
+                </svg>
+                Driving License
+                <span className="ml-1 text-xs font-normal text-gray-400">(Optional)</span>
+              </h2>
+              <p className="text-xs text-gray-400 mb-4">Upload a photo of your license — a secure link valid for 48 hours will be sent with your booking.</p>
+
+              <label className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-6 text-center transition hover:border-brand-blue/50 hover:bg-brand-blue/5">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    setLicenseFile(file);
+                    setLicensePreview(file ? URL.createObjectURL(file) : '');
+                    setUploadError('');
+                  }}
+                />
+                {licensePreview ? (
+                  <img src={licensePreview} alt="License preview" className="max-h-48 w-full rounded-lg object-contain shadow-sm" />
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-10 w-10 text-gray-300" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                    </svg>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Tap to upload your driving license</p>
+                      <p className="mt-0.5 text-xs text-gray-400">JPG, PNG or HEIC · max 10 MB</p>
+                    </div>
+                  </>
+                )}
+              </label>
+
+              {licensePreview && (
+                <button
+                  type="button"
+                  onClick={() => { setLicenseFile(null); setLicensePreview(''); setUploadError(''); }}
+                  className="mt-2 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  Remove photo
+                </button>
+              )}
+              {uploadError && (
+                <p className="mt-2 text-xs text-red-500">{uploadError}</p>
+              )}
             </div>
 
             {/* ── Section 6: Payment Method ── */}
@@ -829,9 +922,18 @@ export default function BookingForm({ vehicle }: Props) {
                 <div className="px-5 pt-4 pb-5">
                   <button
                     type="submit"
-                    className="w-full rounded-xl bg-brand-yellow py-3.5 text-base font-bold text-gray-900 transition-colors hover:bg-brand-yellow/90 shadow-sm"
+                    disabled={uploading}
+                    className="w-full rounded-xl bg-brand-yellow py-3.5 text-base font-bold text-gray-900 transition-colors hover:bg-brand-yellow/90 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Book Now
+                    {uploading ? (
+                      <>
+                        <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden>
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Uploading License…
+                      </>
+                    ) : 'Book Now'}
                   </button>
                   <div className="mt-2.5 flex items-center justify-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-gray-400" aria-hidden>

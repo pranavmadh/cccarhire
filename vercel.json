@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cleanup-licenses",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

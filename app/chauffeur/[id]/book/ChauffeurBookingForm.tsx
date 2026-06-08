@@ -13,6 +13,7 @@ const LOCATIONS = [
   "Baie Sainte Anne",
   "La Réserve Hotel",
   "Lemuria Resort",
+  "Jetty",
   "Other Location",
 ];
 
@@ -60,6 +61,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
   const [whatsapp, setWhatsapp] = useState('');
   const [whatsappDial, setWhatsappDial] = useState('+248');
 
+  const [passengers, setPassengers] = useState(1);
   const [payment, setPayment] = useState<'arrival' | 'card'>('arrival');
   const [agreed, setAgreed] = useState(false);
 
@@ -114,6 +116,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
       `  • Email: ${email || '—'}`,
       `  • Phone: ${phoneDial} ${phone || '—'}`,
       ...(whatsapp ? [`  • WhatsApp: ${whatsappDial} ${whatsapp}`] : []),
+      `  • Passengers: ${passengers}`,
       ``,
       `💳 *Payment Method:* ${paymentLabel}`,
     ];
@@ -347,6 +350,18 @@ export default function ChauffeurBookingForm({ car }: Props) {
                     </select>
                     <input type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="252 52 52" className={inputCls + ' flex-1'} />
                   </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Number of Passengers</label>
+                  <select
+                    value={passengers}
+                    onChange={(e) => setPassengers(Number(e.target.value))}
+                    className={selectCls}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      <option key={n} value={n}>{n} {n === 1 ? 'Passenger' : 'Passengers'}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>

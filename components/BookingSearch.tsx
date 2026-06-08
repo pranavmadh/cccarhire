@@ -83,6 +83,7 @@ const LOCATIONS = [
   "Baie Sainte Anne",
   "Côte d'Or",
   "Amitie",
+  "Jetty",
   "Other Location",
 ];
 

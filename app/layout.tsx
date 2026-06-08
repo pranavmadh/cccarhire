@@ -65,33 +65,64 @@ export const metadata: Metadata = {
   },
 };
 
+const BASE_URL = "https://www.cccarhirepraslin.com";
+
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "CarRental",
-  name: "CC CarHire Praslin",
-  description: "Affordable and reliable car rental in Praslin Island, Seychelles. Serving Anse Lazio, Vallée de Mai, Grand Anse and all of Praslin.",
-  url: "https://www.cccarhirepraslin.com",
-  telephone: "+2482711073",
-  email: "cccarhire22@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Amitie",
-    addressLocality: "Praslin",
-    addressCountry: "SC",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: -4.316,
-    longitude: 55.73,
-  },
-  openingHours: "Mo-Su 00:00-23:59",
-  priceRange: "€€",
-  image: "https://www.cccarhirepraslin.com/hero_image.png",
-  sameAs: [],
-  areaServed: {
-    "@type": "Place",
-    name: "Praslin Island, Seychelles",
-  },
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      name: "CC CarHire Praslin",
+      url: BASE_URL,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/vehicles?q={search_term_string}` },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "CarRental",
+      "@id": `${BASE_URL}/#business`,
+      name: "CC CarHire Praslin",
+      description: "Affordable and reliable car rental in Praslin Island, Seychelles. Serving Anse Lazio, Vallée de Mai, Grand Anse and all of Praslin.",
+      url: BASE_URL,
+      telephone: "+2482711073",
+      email: "cccarhire22@gmail.com",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Amitie",
+        addressLocality: "Praslin",
+        addressCountry: "SC",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: -4.316,
+        longitude: 55.73,
+      },
+      openingHours: "Mo-Su 00:00-23:59",
+      priceRange: "€€",
+      image: `${BASE_URL}/hero_image.png`,
+      sameAs: [],
+      areaServed: {
+        "@type": "Place",
+        name: "Praslin Island, Seychelles",
+      },
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${BASE_URL}/#navigation`,
+      name: "Site Navigation",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Economy Cars", url: `${BASE_URL}/vehicles` },
+        { "@type": "ListItem", position: 2, name: "Chauffeur Service", url: `${BASE_URL}/chauffeur` },
+        { "@type": "ListItem", position: 3, name: "Transfer Service", url: `${BASE_URL}/transfer` },
+        { "@type": "ListItem", position: 4, name: "Praslin Island Guide", url: `${BASE_URL}/praslin` },
+        { "@type": "ListItem", position: 5, name: "About Us", url: `${BASE_URL}/about` },
+        { "@type": "ListItem", position: 6, name: "Contact Us", url: `${BASE_URL}/contact` },
+      ],
+    },
+  ],
 };
 
 export default function RootLayout({
