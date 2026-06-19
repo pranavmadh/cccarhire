@@ -404,6 +404,59 @@ export default function AdminVehiclesPage() {
                     </select>
                   </div>
                 </div>
+
+                {/* Insurance sub-section */}
+                <div className="mt-6 border-t border-gray-100 pt-5">
+                  <p className="mb-1 text-sm font-semibold text-gray-700">Protection &amp; Insurance Prices <span className="ml-1 text-xs font-normal text-gray-400">(per day)</span></p>
+                  <p className="mb-4 text-xs text-gray-400">Leave blank to use the site-wide defaults (CDW: €0, Reduced 800: €10, Reduced 500: €15).</p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div>
+                      <label className={labelCls}>CDW Insurance (EUR/day)</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                        <input
+                          name="insuranceCdwPrice"
+                          type="number"
+                          min={0}
+                          step={1}
+                          placeholder="0 (default)"
+                          className={inputCls + " pl-7"}
+                          defaultValue={ev?.insuranceCdwPrice ?? ""}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Reduced Excess 800 (EUR/day)</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                        <input
+                          name="insuranceReduced800Price"
+                          type="number"
+                          min={0}
+                          step={1}
+                          placeholder="10 (default)"
+                          className={inputCls + " pl-7"}
+                          defaultValue={ev?.insuranceReduced800Price ?? ""}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Reduced Excess 500 (EUR/day)</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                        <input
+                          name="insuranceReducedPrice"
+                          type="number"
+                          min={0}
+                          step={1}
+                          placeholder="15 (default)"
+                          className={inputCls + " pl-7"}
+                          defaultValue={ev?.insuranceReducedPrice ?? ""}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Section 5: Description */}

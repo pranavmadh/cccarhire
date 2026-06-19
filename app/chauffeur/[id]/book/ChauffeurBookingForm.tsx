@@ -52,8 +52,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
 
   const [babySeat, setBabySeat] = useState(0);
   const [childBooster, setChildBooster] = useState(0);
-  const [addDriver, setAddDriver] = useState(false);
-
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -83,7 +81,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
     const extraLines: string[] = [];
     if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
     if (childBooster > 0) extraLines.push(`  • Child Booster x${childBooster}: €${fmt2(childBooster * 5)}`);
-    if (addDriver) extraLines.push(`  • Second Driver: Free`);
     if (extraLines.length === 0) extraLines.push('  None');
 
     const lines = [
@@ -293,26 +290,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
                   </div>
                 </div>
 
-                {/* Second Driver */}
-                <div className={`flex flex-col rounded-2xl border p-4 shadow-sm transition-colors ${addDriver ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}>
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-brand-blue/8">
-                      <Image src="/Second_Driver.png" alt="Second Driver" fill className="object-cover" sizes="56px" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">Second Driver</p>
-                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3"><path fillRule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" /></svg>
-                        Free
-                      </span>
-                      <p className="mt-1.5 text-xs text-gray-500">Add another driver to your rental for free.</p>
-                    </div>
-                  </div>
-                  <button type="button" onClick={() => setAddDriver(!addDriver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${addDriver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
-                    {addDriver ? '✓ Added' : '+ Add Driver'}
-                  </button>
-                </div>
-
               </div>
             </div>
 
@@ -470,7 +447,7 @@ export default function ChauffeurBookingForm({ car }: Props) {
                   </div>
                 </div>
 
-                {(extrasTotal > 0 || addDriver) && (
+                {extrasTotal > 0 && (
                   <div className="px-5 py-4 border-b border-gray-100 space-y-2 text-sm">
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Extras</p>
                     {babySeat > 0 && (
@@ -483,12 +460,6 @@ export default function ChauffeurBookingForm({ car }: Props) {
                       <div className="flex justify-between text-gray-700">
                         <span>Child Booster ({childBooster})</span>
                         <span className="font-medium">€{fmt2(childBooster * 5)}</span>
-                      </div>
-                    )}
-                    {addDriver && (
-                      <div className="flex justify-between text-gray-700">
-                        <span>Second Driver</span>
-                        <span className="font-medium text-green-600">Free</span>
                       </div>
                     )}
                   </div>

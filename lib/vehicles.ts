@@ -40,6 +40,9 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     price: input.price,
     discountedPrice: input.discountedPrice,
     discountedMinDays: input.discountedMinDays,
+    insuranceCdwPrice: input.insuranceCdwPrice,
+    insuranceReduced800Price: input.insuranceReduced800Price,
+    insuranceReducedPrice: input.insuranceReducedPrice,
     image: input.imagePath,
     popular: input.popular,
     createdAt: new Date().toISOString(),
@@ -83,6 +86,9 @@ export async function updateVehicle(
     price?: number;
     discountedPrice?: number | null;
     discountedMinDays?: number | null;
+    insuranceCdwPrice?: number | null;
+    insuranceReduced800Price?: number | null;
+    insuranceReducedPrice?: number | null;
     popular?: boolean;
     imagePath?: string;
   }
@@ -101,6 +107,9 @@ export async function updateVehicle(
   if (input.price !== undefined) updates.price = input.price;
   if ("discountedPrice" in input) updates.discountedPrice = input.discountedPrice;
   if ("discountedMinDays" in input) updates.discountedMinDays = input.discountedMinDays;
+  if ("insuranceCdwPrice" in input) updates.insuranceCdwPrice = input.insuranceCdwPrice;
+  if ("insuranceReduced800Price" in input) updates.insuranceReduced800Price = input.insuranceReduced800Price;
+  if ("insuranceReducedPrice" in input) updates.insuranceReducedPrice = input.insuranceReducedPrice;
   if (input.popular !== undefined) updates.popular = input.popular;
   if (input.imagePath !== undefined) updates.image = input.imagePath;
 

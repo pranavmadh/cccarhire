@@ -68,6 +68,21 @@ export async function POST(request: Request) {
       discountedMinDaysRaw === null || discountedMinDaysRaw === ""
         ? undefined
         : Number(discountedMinDaysRaw);
+    const insuranceCdwPriceRaw = formData.get("insuranceCdwPrice");
+    const insuranceCdwPrice =
+      insuranceCdwPriceRaw === null || insuranceCdwPriceRaw === ""
+        ? undefined
+        : Number(insuranceCdwPriceRaw);
+    const insuranceReduced800PriceRaw = formData.get("insuranceReduced800Price");
+    const insuranceReduced800Price =
+      insuranceReduced800PriceRaw === null || insuranceReduced800PriceRaw === ""
+        ? undefined
+        : Number(insuranceReduced800PriceRaw);
+    const insuranceReducedPriceRaw = formData.get("insuranceReducedPrice");
+    const insuranceReducedPrice =
+      insuranceReducedPriceRaw === null || insuranceReducedPriceRaw === ""
+        ? undefined
+        : Number(insuranceReducedPriceRaw);
     const airConditioning = parseBool(formData.get("airConditioning"));
     const fuelConsumption = String(formData.get("fuelConsumption") ?? "").trim();
     const featuresRaw = String(formData.get("features") ?? "").trim();
@@ -181,6 +196,9 @@ export async function POST(request: Request) {
       price,
       discountedPrice,
       discountedMinDays,
+      insuranceCdwPrice,
+      insuranceReduced800Price,
+      insuranceReducedPrice,
       popular,
       imagePath,
     });

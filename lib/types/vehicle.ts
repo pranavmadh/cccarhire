@@ -16,6 +16,9 @@ export interface Vehicle {
   price: number;
   discountedPrice?: number;
   discountedMinDays?: number;
+  insuranceCdwPrice?: number;
+  insuranceReduced800Price?: number;
+  insuranceReducedPrice?: number;
   image: string;
   popular: boolean;
   createdAt: string;
@@ -35,6 +38,9 @@ export interface CreateVehicleInput {
   price: number;
   discountedPrice?: number;
   discountedMinDays?: number;
+  insuranceCdwPrice?: number;
+  insuranceReduced800Price?: number;
+  insuranceReducedPrice?: number;
   popular: boolean;
   imagePath: string;
 }

@@ -19,29 +19,33 @@ const LOCATIONS = [
   'Other Location',
 ];
 
-const INSURANCE_OPTIONS = [
-  {
-    id: 'cdw' as const,
-    label: 'CDW Insurance',
-    badge: 'Included',
-    desc: 'Excess to EUR 1000\nIncluded in the price',
-    pricePerDay: 0,
-  },
-  {
-    id: 'reduced800' as const,
-    label: 'Reduced Excess 800',
-    badge: null,
-    desc: 'Reduce excess to EUR 800\nfor added peace of mind',
-    pricePerDay: 10,
-  },
-  {
-    id: 'reduced' as const,
-    label: 'Reduced Excess 500',
-    badge: null,
-    desc: 'Reduce excess to EUR 500\nfor extra peace of mind',
-    pricePerDay: 15,
-  },
-];
+const DEFAULT_INSURANCE_PRICES = { cdw: 0, reduced800: 10, reduced: 15 };
+
+function buildInsuranceOptions(vehicle: Vehicle) {
+  return [
+    {
+      id: 'cdw' as const,
+      label: 'CDW Insurance',
+      badge: 'Included',
+      desc: 'Excess to EUR 1000\nIncluded in the price',
+      pricePerDay: vehicle.insuranceCdwPrice ?? DEFAULT_INSURANCE_PRICES.cdw,
+    },
+    {
+      id: 'reduced800' as const,
+      label: 'Reduced Excess 800',
+      badge: null,
+      desc: 'Reduce excess to EUR 800\nfor added peace of mind',
+      pricePerDay: vehicle.insuranceReduced800Price ?? DEFAULT_INSURANCE_PRICES.reduced800,
+    },
+    {
+      id: 'reduced' as const,
+      label: 'Reduced Excess 500',
+      badge: null,
+      desc: 'Reduce excess to EUR 500\nfor extra peace of mind',
+      pricePerDay: vehicle.insuranceReducedPrice ?? DEFAULT_INSURANCE_PRICES.reduced,
+    },
+  ];
+}
 
 /* ── Helpers ── */
 function todayStr() {
@@ -75,6 +79,7 @@ function fmt2(n: number) {
 interface Props { vehicle: Vehicle }
 
 export default function BookingForm({ vehicle }: Props) {
+  const INSURANCE_OPTIONS = buildInsuranceOptions(vehicle);
   const today = todayStr();
   const sp = useSearchParams();
 
@@ -662,7 +667,7 @@ export default function BookingForm({ vehicle }: Props) {
                 Driving License
                 <span className="ml-1 text-xs font-normal text-gray-400">(Optional)</span>
               </h2>
-              <p className="text-xs text-gray-400 mb-4">Upload a photo of your license — a secure link valid for 48 hours will be sent with your booking.</p>
+              <p className="text-xs text-gray-400 mb-4">Upload a photo of your license.</p>
 
               <label className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-6 text-center transition hover:border-brand-blue/50 hover:bg-brand-blue/5">
                 <input
