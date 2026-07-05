@@ -525,7 +525,7 @@ export default function BookingForm({ vehicle }: Props) {
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3"><path fillRule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" /></svg>
                         Free
                       </span>
-                      <p className="mt-1.5 text-xs text-gray-500">Add another driver to your rental for free.</p>
+                      <p className="mt-1.5 text-xs text-gray-500">Add another driver to your rental for free. Must have at least 2 years of driving experience.</p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setAddDriver(!addDriver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${addDriver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
@@ -561,6 +561,13 @@ export default function BookingForm({ vehicle }: Props) {
                 </svg>
                 Customer Details
               </h2>
+
+              <div className="mb-4 rounded-xl border border-brand-blue/20 bg-brand-blue/5 px-4 py-3">
+                <p className="text-xs text-gray-600">
+                  <span className="font-semibold text-gray-800">Driver requirement:</span>{' '}
+                  The driver must have at least 2 years of driving experience.
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
