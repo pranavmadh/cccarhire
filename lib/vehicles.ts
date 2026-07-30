@@ -1,6 +1,6 @@
 import path from "path";
 import { supabase } from "./supabase";
-import type { CreateVehicleInput, Transmission, Vehicle, VehicleCategory } from "./types/vehicle";
+import type { CreateVehicleInput, Transmission, TyreWaiverBilling, Vehicle, VehicleCategory } from "./types/vehicle";
 
 export async function getAllVehicles(): Promise<Vehicle[]> {
   const { data, error } = await supabase
@@ -43,6 +43,8 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     insuranceCdwPrice: input.insuranceCdwPrice,
     insuranceReduced800Price: input.insuranceReduced800Price,
     insuranceReducedPrice: input.insuranceReducedPrice,
+    tyreWaiverPrice: input.tyreWaiverPrice,
+    tyreWaiverBilling: input.tyreWaiverBilling,
     image: input.imagePath,
     popular: input.popular,
     createdAt: new Date().toISOString(),
@@ -89,6 +91,8 @@ export async function updateVehicle(
     insuranceCdwPrice?: number | null;
     insuranceReduced800Price?: number | null;
     insuranceReducedPrice?: number | null;
+    tyreWaiverPrice?: number | null;
+    tyreWaiverBilling?: TyreWaiverBilling | null;
     popular?: boolean;
     imagePath?: string;
   }
@@ -110,6 +114,8 @@ export async function updateVehicle(
   if ("insuranceCdwPrice" in input) updates.insuranceCdwPrice = input.insuranceCdwPrice;
   if ("insuranceReduced800Price" in input) updates.insuranceReduced800Price = input.insuranceReduced800Price;
   if ("insuranceReducedPrice" in input) updates.insuranceReducedPrice = input.insuranceReducedPrice;
+  if ("tyreWaiverPrice" in input) updates.tyreWaiverPrice = input.tyreWaiverPrice;
+  if ("tyreWaiverBilling" in input) updates.tyreWaiverBilling = input.tyreWaiverBilling;
   if (input.popular !== undefined) updates.popular = input.popular;
   if (input.imagePath !== undefined) updates.image = input.imagePath;
 

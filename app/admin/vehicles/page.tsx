@@ -457,6 +457,41 @@ export default function AdminVehiclesPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Tyre Waiver sub-section */}
+                <div className="mt-6 border-t border-gray-100 pt-5">
+                  <p className="mb-1 text-sm font-semibold text-gray-700">Tyre Waiver</p>
+                  <p className="mb-4 text-xs text-gray-400">Set per car — defaults to €15 one-time. Change the price or billing for this vehicle only.</p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className={labelCls}>Tyre Waiver Price (EUR)</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                        <input
+                          name="tyreWaiverPrice"
+                          type="number"
+                          min={0}
+                          step={1}
+                          className={inputCls + " pl-7"}
+                          defaultValue={ev?.tyreWaiverPrice ?? 15}
+                          key={ev ? `tyre-price-${ev.id}` : "tyre-price-new"}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelCls}>Billing Type</label>
+                      <select
+                        name="tyreWaiverBilling"
+                        defaultValue={ev?.tyreWaiverBilling ?? "once"}
+                        className={selectCls}
+                        key={ev ? `tyre-billing-${ev.id}` : "tyre-billing-new"}
+                      >
+                        <option value="once">One-time (whole rental)</option>
+                        <option value="daily">Per day</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Section 5: Description */}

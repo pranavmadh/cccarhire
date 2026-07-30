@@ -1,5 +1,5 @@
 import { removeVehicle, saveUploadedImage, updateVehicle } from "@/lib/vehicles";
-import type { Transmission, VehicleCategory } from "@/lib/types/vehicle";
+import type { Transmission, TyreWaiverBilling, VehicleCategory } from "@/lib/types/vehicle";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -9,6 +9,9 @@ function isValidCategory(v: string): v is VehicleCategory {
 }
 function isValidTransmission(v: string): v is Transmission {
   return v === "Automatic" || v === "Manual";
+}
+function isValidTyreWaiverBilling(v: string): v is TyreWaiverBilling {
+  return v === "daily" || v === "once";
 }
 function parseBool(v: FormDataEntryValue | null): boolean | undefined {
   if (v === null) return undefined;
@@ -96,6 +99,21 @@ export async function PATCH(
     const insuranceReducedPriceRaw = formData.get("insuranceReducedPrice");
     if (insuranceReducedPriceRaw !== null) {
       input.insuranceReducedPrice = insuranceReducedPriceRaw === "" ? null : Number(insuranceReducedPriceRaw);
+    }
+
+    const tyreWaiverPriceRaw = formData.get("tyreWaiverPrice");
+    if (tyreWaiverPriceRaw !== null) {
+      input.tyreWaiverPrice = tyreWaiverPriceRaw === "" ? 15 : Number(tyreWaiverPriceRaw);
+    }
+
+    const tyreWaiverBillingRaw = formData.get("tyreWaiverBilling");
+    if (tyreWaiverBillingRaw !== null) {
+      const billing = String(tyreWaiverBillingRaw).trim();
+      if (billing === "" || !isValidTyreWaiverBilling(billing)) {
+        input.tyreWaiverBilling = "once";
+      } else {
+        input.tyreWaiverBilling = billing;
+      }
     }
 
     const acRaw = formData.get("airConditioning");

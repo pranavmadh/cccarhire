@@ -1,5 +1,5 @@
 import { addVehicle, getAllVehicles, saveUploadedImage } from "@/lib/vehicles";
-import type { Transmission, VehicleCategory } from "@/lib/types/vehicle";
+import type { Transmission, TyreWaiverBilling, VehicleCategory } from "@/lib/types/vehicle";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -28,6 +28,10 @@ function isValidCategory(value: string): value is VehicleCategory {
 
 function isValidTransmission(value: string): value is Transmission {
   return value === "Automatic" || value === "Manual";
+}
+
+function isValidTyreWaiverBilling(value: string): value is TyreWaiverBilling {
+  return value === "daily" || value === "once";
 }
 
 export async function POST(request: Request) {
@@ -83,6 +87,15 @@ export async function POST(request: Request) {
       insuranceReducedPriceRaw === null || insuranceReducedPriceRaw === ""
         ? undefined
         : Number(insuranceReducedPriceRaw);
+    const tyreWaiverPriceRaw = formData.get("tyreWaiverPrice");
+    const tyreWaiverPrice =
+      tyreWaiverPriceRaw === null || tyreWaiverPriceRaw === ""
+        ? 15
+        : Number(tyreWaiverPriceRaw);
+    const tyreWaiverBillingRaw = String(formData.get("tyreWaiverBilling") ?? "").trim();
+    const tyreWaiverBilling = isValidTyreWaiverBilling(tyreWaiverBillingRaw)
+      ? tyreWaiverBillingRaw
+      : "once";
     const airConditioning = parseBool(formData.get("airConditioning"));
     const fuelConsumption = String(formData.get("fuelConsumption") ?? "").trim();
     const featuresRaw = String(formData.get("features") ?? "").trim();
@@ -199,6 +212,8 @@ export async function POST(request: Request) {
       insuranceCdwPrice,
       insuranceReduced800Price,
       insuranceReducedPrice,
+      tyreWaiverPrice,
+      tyreWaiverBilling,
       popular,
       imagePath,
     });

@@ -1,5 +1,6 @@
 export type VehicleCategory = "suv" | "hatchback" | "compact";
 export type Transmission = "Automatic" | "Manual";
+export type TyreWaiverBilling = "daily" | "once";
 
 export interface Vehicle {
   id: string;
@@ -19,6 +20,8 @@ export interface Vehicle {
   insuranceCdwPrice?: number;
   insuranceReduced800Price?: number;
   insuranceReducedPrice?: number;
+  tyreWaiverPrice?: number;
+  tyreWaiverBilling?: TyreWaiverBilling;
   image: string;
   popular: boolean;
   createdAt: string;
@@ -41,6 +44,8 @@ export interface CreateVehicleInput {
   insuranceCdwPrice?: number;
   insuranceReduced800Price?: number;
   insuranceReducedPrice?: number;
+  tyreWaiverPrice?: number;
+  tyreWaiverBilling?: TyreWaiverBilling;
   popular: boolean;
   imagePath: string;
 }

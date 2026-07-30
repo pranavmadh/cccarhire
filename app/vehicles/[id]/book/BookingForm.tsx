@@ -20,6 +20,8 @@ const LOCATIONS = [
 ];
 
 const DEFAULT_INSURANCE_PRICES = { cdw: 0, reduced800: 10, reduced: 15 };
+const DEFAULT_TYRE_WAIVER_PRICE = 15;
+const DEFAULT_TYRE_WAIVER_BILLING = 'once' as const;
 
 function buildInsuranceOptions(vehicle: Vehicle) {
   return [
@@ -135,7 +137,12 @@ export default function BookingForm({ vehicle }: Props) {
   const subtotal = ratePerDay * duration;
   const insPerDay = INSURANCE_OPTIONS.find((o) => o.id === insurance)!.pricePerDay;
   const insTotal = insPerDay * duration;
-  const extrasDaily = babySeat * 5 + childBooster * 5 + (tyreWaiver ? 10 * duration : 0);
+  const tyreWaiverPrice = vehicle.tyreWaiverPrice ?? DEFAULT_TYRE_WAIVER_PRICE;
+  const tyreWaiverBilling = vehicle.tyreWaiverBilling ?? DEFAULT_TYRE_WAIVER_BILLING;
+  const tyreWaiverTotal = tyreWaiver
+    ? (tyreWaiverBilling === 'daily' ? tyreWaiverPrice * duration : tyreWaiverPrice)
+    : 0;
+  const extrasDaily = babySeat * 5 + childBooster * 5 + tyreWaiverTotal;
   const total = subtotal + insTotal + extrasDaily;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -173,7 +180,10 @@ export default function BookingForm({ vehicle }: Props) {
     if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
     if (childBooster > 0) extraLines.push(`  • Child Booster Seat x${childBooster}: €${fmt2(childBooster * 5)}`);
     if (addDriver) extraLines.push(`  • Second Driver: Free`);
-    if (tyreWaiver) extraLines.push(`  • Tyre Waiver: €${fmt2(10 * duration)}`);
+    if (tyreWaiver) {
+      const billingLabel = tyreWaiverBilling === 'daily' ? ' (per day)' : ' (one-time)';
+      extraLines.push(`  • Tyre Waiver${billingLabel}: €${fmt2(tyreWaiverTotal)}`);
+    }
     if (extraLines.length === 0) extraLines.push('  None');
 
     const lines = [
@@ -542,7 +552,9 @@ export default function BookingForm({ vehicle }: Props) {
                     <div>
                       <p className="text-sm font-bold text-gray-900">Tyre Waiver</p>
                       <p className="mt-1 text-xs text-gray-500">Protects against puncture or tyre damage costs.</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€10.00 / Day</p>
+                      <p className="mt-1.5 text-sm font-bold text-brand-blue">
+                        €{fmt2(tyreWaiverPrice)}{tyreWaiverBilling === 'daily' ? ' / Day' : ' (one-time)'}
+                      </p>
                     </div>
                   </div>
                   <button type="button" onClick={() => setTyreWaiver(!tyreWaiver)} className={`mt-auto w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${tyreWaiver ? 'border-green-300 bg-green-100 text-green-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-blue/40'}`}>
@@ -902,8 +914,8 @@ export default function BookingForm({ vehicle }: Props) {
                   )}
                   {tyreWaiver && (
                     <div className="flex justify-between text-gray-700">
-                      <span>Tyre Waiver</span>
-                      <span className="font-medium">€{fmt2(10 * duration)}</span>
+                      <span>Tyre Waiver{tyreWaiverBilling === 'daily' ? '' : ' (one-time)'}</span>
+                      <span className="font-medium">€{fmt2(tyreWaiverTotal)}</span>
                     </div>
                   )}
                   {!babySeat && !childBooster && !addDriver && !tyreWaiver && (
