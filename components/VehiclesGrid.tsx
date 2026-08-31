@@ -211,6 +211,11 @@ export default function VehiclesGrid() {
                           €{vehicle.discountedPrice}/day ({vehicle.discountedMinDays}+ days)
                         </p>
                       )}
+                      {vehicle.longTermDiscountPrice && vehicle.longTermDiscountMinDays && (
+                        <p className="mt-0.5 text-xs font-medium text-green-700">
+                          €{vehicle.longTermDiscountPrice}/day ({vehicle.longTermDiscountMinDays}+ days)
+                        </p>
+                      )}
                     </div>
                     <Link
                       href={`/vehicles/${vehicle.id}${bookingQuery}`}

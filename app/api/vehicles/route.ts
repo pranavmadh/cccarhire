@@ -72,6 +72,16 @@ export async function POST(request: Request) {
       discountedMinDaysRaw === null || discountedMinDaysRaw === ""
         ? undefined
         : Number(discountedMinDaysRaw);
+    const longTermDiscountPriceRaw = formData.get("longTermDiscountPrice");
+    const longTermDiscountPrice =
+      longTermDiscountPriceRaw === null || longTermDiscountPriceRaw === ""
+        ? undefined
+        : Number(longTermDiscountPriceRaw);
+    const longTermDiscountMinDaysRaw = formData.get("longTermDiscountMinDays");
+    const longTermDiscountMinDays =
+      longTermDiscountMinDaysRaw === null || longTermDiscountMinDaysRaw === ""
+        ? undefined
+        : Number(longTermDiscountMinDaysRaw);
     const insuranceCdwPriceRaw = formData.get("insuranceCdwPrice");
     const insuranceCdwPrice =
       insuranceCdwPriceRaw === null || insuranceCdwPriceRaw === ""
@@ -178,6 +188,30 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    if (
+      longTermDiscountPrice !== undefined &&
+      (!Number.isFinite(longTermDiscountPrice) ||
+        longTermDiscountPrice <= 0 ||
+        longTermDiscountPrice >= price ||
+        (discountedPrice !== undefined && longTermDiscountPrice >= discountedPrice))
+    ) {
+      return NextResponse.json(
+        { error: "Long-term discount price must be positive and lower than the daily price and the discounted price" },
+        { status: 400 }
+      );
+    }
+    if (
+      longTermDiscountMinDays !== undefined &&
+      (!Number.isFinite(longTermDiscountMinDays) ||
+        longTermDiscountMinDays < 2 ||
+        longTermDiscountMinDays > 60 ||
+        (discountedMinDays !== undefined && longTermDiscountMinDays <= discountedMinDays))
+    ) {
+      return NextResponse.json(
+        { error: "Long-term discount days must be between 2 and 60 and greater than the discount days" },
+        { status: 400 }
+      );
+    }
 
     if (!(imageFile instanceof File) || imageFile.size === 0) {
       return NextResponse.json(
@@ -209,6 +243,8 @@ export async function POST(request: Request) {
       price,
       discountedPrice,
       discountedMinDays,
+      longTermDiscountPrice,
+      longTermDiscountMinDays,
       insuranceCdwPrice,
       insuranceReduced800Price,
       insuranceReducedPrice,

@@ -86,6 +86,16 @@ export async function PATCH(
       input.discountedMinDays = discountedMinDaysRaw === "" ? null : Number(discountedMinDaysRaw);
     }
 
+    const longTermDiscountPriceRaw = formData.get("longTermDiscountPrice");
+    if (longTermDiscountPriceRaw !== null) {
+      input.longTermDiscountPrice = longTermDiscountPriceRaw === "" ? null : Number(longTermDiscountPriceRaw);
+    }
+
+    const longTermDiscountMinDaysRaw = formData.get("longTermDiscountMinDays");
+    if (longTermDiscountMinDaysRaw !== null) {
+      input.longTermDiscountMinDays = longTermDiscountMinDaysRaw === "" ? null : Number(longTermDiscountMinDaysRaw);
+    }
+
     const insuranceCdwPriceRaw = formData.get("insuranceCdwPrice");
     if (insuranceCdwPriceRaw !== null) {
       input.insuranceCdwPrice = insuranceCdwPriceRaw === "" ? null : Number(insuranceCdwPriceRaw);

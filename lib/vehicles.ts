@@ -40,6 +40,8 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     price: input.price,
     discountedPrice: input.discountedPrice,
     discountedMinDays: input.discountedMinDays,
+    longTermDiscountPrice: input.longTermDiscountPrice,
+    longTermDiscountMinDays: input.longTermDiscountMinDays,
     insuranceCdwPrice: input.insuranceCdwPrice,
     insuranceReduced800Price: input.insuranceReduced800Price,
     insuranceReducedPrice: input.insuranceReducedPrice,
@@ -88,6 +90,8 @@ export async function updateVehicle(
     price?: number;
     discountedPrice?: number | null;
     discountedMinDays?: number | null;
+    longTermDiscountPrice?: number | null;
+    longTermDiscountMinDays?: number | null;
     insuranceCdwPrice?: number | null;
     insuranceReduced800Price?: number | null;
     insuranceReducedPrice?: number | null;
@@ -111,6 +115,8 @@ export async function updateVehicle(
   if (input.price !== undefined) updates.price = input.price;
   if ("discountedPrice" in input) updates.discountedPrice = input.discountedPrice;
   if ("discountedMinDays" in input) updates.discountedMinDays = input.discountedMinDays;
+  if ("longTermDiscountPrice" in input) updates.longTermDiscountPrice = input.longTermDiscountPrice;
+  if ("longTermDiscountMinDays" in input) updates.longTermDiscountMinDays = input.longTermDiscountMinDays;
   if ("insuranceCdwPrice" in input) updates.insuranceCdwPrice = input.insuranceCdwPrice;
   if ("insuranceReduced800Price" in input) updates.insuranceReduced800Price = input.insuranceReduced800Price;
   if ("insuranceReducedPrice" in input) updates.insuranceReducedPrice = input.insuranceReducedPrice;

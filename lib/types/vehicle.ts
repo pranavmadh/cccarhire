@@ -17,6 +17,8 @@ export interface Vehicle {
   price: number;
   discountedPrice?: number;
   discountedMinDays?: number;
+  longTermDiscountPrice?: number;
+  longTermDiscountMinDays?: number;
   insuranceCdwPrice?: number;
   insuranceReduced800Price?: number;
   insuranceReducedPrice?: number;
@@ -41,6 +43,8 @@ export interface CreateVehicleInput {
   price: number;
   discountedPrice?: number;
   discountedMinDays?: number;
+  longTermDiscountPrice?: number;
+  longTermDiscountMinDays?: number;
   insuranceCdwPrice?: number;
   insuranceReduced800Price?: number;
   insuranceReducedPrice?: number;

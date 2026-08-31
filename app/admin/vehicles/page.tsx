@@ -392,6 +392,22 @@ export default function AdminVehiclesPage() {
                       ))}
                     </select>
                   </div>
+                  <div>
+                    <label className={labelCls}>Long-Term Discount Price (EUR)</label>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                      <input name="longTermDiscountPrice" type="number" min={1} step={1} placeholder="45.00" className={inputCls + " pl-7"} defaultValue={ev?.longTermDiscountPrice ?? ""} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Min. Days for Long-Term Discount</label>
+                    <select name="longTermDiscountMinDays" defaultValue={ev?.longTermDiscountMinDays ? String(ev.longTermDiscountMinDays) : ""} className={selectCls}>
+                      <option value="">None</option>
+                      {[7,10,14,21,30,45,60].map((n) => (
+                        <option key={n} value={n}>{n}+ days</option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="sm:col-span-2">
                     <label className={labelCls}>Admin Secret</label>
                     <input ref={adminSecretRef} name="adminSecret" type="password" placeholder="Only if ADMIN_SECRET is set in .env" className={inputCls} />
@@ -697,6 +713,9 @@ export default function AdminVehiclesPage() {
                           €{v.price}/day
                           {v.discountedPrice && v.discountedMinDays && (
                             <span className="ml-1 text-xs font-normal text-green-600">(€{v.discountedPrice}/{v.discountedMinDays}+ days)</span>
+                          )}
+                          {v.longTermDiscountPrice && v.longTermDiscountMinDays && (
+                            <span className="ml-1 text-xs font-normal text-green-600">(€{v.longTermDiscountPrice}/{v.longTermDiscountMinDays}+ days)</span>
                           )}
                         </p>
                       </div>

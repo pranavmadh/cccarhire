@@ -191,6 +191,7 @@ export default async function VehicleDetailPage({ params, searchParams }: Props)
   const description = getDescription(vehicle);
 
   const hasDiscount = vehicle.discountedPrice && vehicle.discountedMinDays;
+  const hasLongTermDiscount = vehicle.longTermDiscountPrice && vehicle.longTermDiscountMinDays;
 
   const specs = [
     { label: `${vehicle.seats} Seats`, icon: specDefs[0].icon },
@@ -368,16 +369,28 @@ export default async function VehicleDetailPage({ params, searchParams }: Props)
                       <span className="ml-1 text-sm text-gray-500">/ day</span>
                     </p>
                   </div>
-                  {hasDiscount && (
-                    <div className="rounded-lg bg-green-50 border border-green-100 px-3 py-2 text-right">
-                      <p className="text-xs font-medium text-green-700">
-                        {vehicle.discountedMinDays}+ days
-                      </p>
-                      <p className="font-poppins text-lg font-bold text-green-700">
-                        €{vehicle.discountedPrice}<span className="text-xs font-normal">/day</span>
-                      </p>
-                    </div>
-                  )}
+                  <div className="flex flex-col items-end gap-1.5">
+                    {hasDiscount && (
+                      <div className="rounded-lg bg-green-50 border border-green-100 px-3 py-2 text-right">
+                        <p className="text-xs font-medium text-green-700">
+                          {vehicle.discountedMinDays}+ days
+                        </p>
+                        <p className="font-poppins text-lg font-bold text-green-700">
+                          €{vehicle.discountedPrice}<span className="text-xs font-normal">/day</span>
+                        </p>
+                      </div>
+                    )}
+                    {hasLongTermDiscount && (
+                      <div className="rounded-lg bg-green-100 border border-green-200 px-3 py-2 text-right">
+                        <p className="text-xs font-medium text-green-800">
+                          {vehicle.longTermDiscountMinDays}+ days
+                        </p>
+                        <p className="font-poppins text-lg font-bold text-green-800">
+                          €{vehicle.longTermDiscountPrice}<span className="text-xs font-normal">/day</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Continue Booking button */}

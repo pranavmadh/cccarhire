@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Vehicle } from '@/lib/types/vehicle';
 import { COUNTRY_CODES } from '@/lib/country-codes';
+import { getRateForDuration } from '@/lib/pricing';
 
 /* ── Constants ── */
 const LOCATIONS = [
@@ -129,11 +130,9 @@ export default function BookingForm({ vehicle }: Props) {
 
   /* ── Price calculation ── */
   const duration = useMemo(() => diffDays(pickupDate, pickupTime, returnDate, returnTime), [pickupDate, pickupTime, returnDate, returnTime]);
-  const hasDiscount =
-    !!vehicle.discountedPrice &&
-    !!vehicle.discountedMinDays &&
-    duration >= vehicle.discountedMinDays;
-  const ratePerDay = hasDiscount ? vehicle.discountedPrice! : vehicle.price;
+  const { rate: ratePerDay, tier: rateTier } = getRateForDuration(vehicle, duration);
+  const hasDiscount = rateTier !== 'base';
+  const hasLongTermDiscount = rateTier === 'longTerm';
   const subtotal = ratePerDay * duration;
   const insPerDay = INSURANCE_OPTIONS.find((o) => o.id === insurance)!.pricePerDay;
   const insTotal = insPerDay * duration;
@@ -868,13 +867,20 @@ export default function BookingForm({ vehicle }: Props) {
                   {hasDiscount && (
                     <div className="flex items-center gap-1.5">
                       <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                        Discount applied ({vehicle.discountedMinDays}+ days)
+                        {hasLongTermDiscount
+                          ? `Long-term discount applied (${vehicle.longTermDiscountMinDays}+ days)`
+                          : `Discount applied (${vehicle.discountedMinDays}+ days)`}
                       </span>
                     </div>
                   )}
                   {!hasDiscount && vehicle.discountedPrice && vehicle.discountedMinDays && (
                     <p className="text-xs text-gray-400">
                       Book {vehicle.discountedMinDays}+ days to get €{vehicle.discountedPrice}/day
+                    </p>
+                  )}
+                  {hasDiscount && !hasLongTermDiscount && vehicle.longTermDiscountPrice && vehicle.longTermDiscountMinDays && (
+                    <p className="text-xs text-gray-400">
+                      Book {vehicle.longTermDiscountMinDays}+ days to get €{vehicle.longTermDiscountPrice}/day
                     </p>
                   )}
                   <div className="flex justify-between text-gray-700">
