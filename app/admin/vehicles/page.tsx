@@ -508,6 +508,39 @@ export default function AdminVehiclesPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Baby Seat sub-section */}
+                <div className="mt-6 border-t border-gray-100 pt-5">
+                  <p className="mb-1 text-sm font-semibold text-gray-700">Baby Seat</p>
+                  <p className="mb-4 text-xs text-gray-400">Set per car — defaults to €5 per seat for the whole trip.</p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className={labelCls}>Baby Seat Price (EUR / seat)</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">€</span>
+                        <input
+                          name="babySeatPrice"
+                          type="number"
+                          min={0}
+                          step={1}
+                          className={inputCls + " pl-7"}
+                          defaultValue={ev?.babySeatPrice ?? 5}
+                          key={ev ? `baby-seat-price-${ev.id}` : "baby-seat-price-new"}
+                        />
+                      </div>
+                    </div>
+                    <label className="flex items-center gap-2 self-end pb-2.5 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        name="babySeatApplyAll"
+                        value="true"
+                        className="h-4 w-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue"
+                        key={ev ? `baby-seat-all-${ev.id}` : "baby-seat-all-new"}
+                      />
+                      Apply this price to all cars
+                    </label>
+                  </div>
+                </div>
               </div>
 
               {/* Section 5: Description */}

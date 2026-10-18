@@ -22,6 +22,7 @@ const LOCATIONS = [
 
 const DEFAULT_INSURANCE_PRICES = { cdw: 0, reduced800: 10, reduced: 15 };
 const DEFAULT_TYRE_WAIVER_PRICE = 15;
+const DEFAULT_BABY_SEAT_PRICE = 5;
 const DEFAULT_TYRE_WAIVER_BILLING = 'once' as const;
 
 function buildInsuranceOptions(vehicle: Vehicle) {
@@ -141,7 +142,8 @@ export default function BookingForm({ vehicle }: Props) {
   const tyreWaiverTotal = tyreWaiver
     ? (tyreWaiverBilling === 'daily' ? tyreWaiverPrice * duration : tyreWaiverPrice)
     : 0;
-  const extrasDaily = babySeat * 5 + childBooster * 5 + tyreWaiverTotal;
+  const babySeatPrice = vehicle.babySeatPrice ?? DEFAULT_BABY_SEAT_PRICE;
+  const extrasDaily = babySeat * babySeatPrice + childBooster * 5 + tyreWaiverTotal;
   const total = subtotal + insTotal + extrasDaily;
   const cardSurcharge = payment === 'card' ? Math.round(total * 0.03 * 100) / 100 : 0;
   const outstanding = Math.round((total + cardSurcharge) * 100) / 100;
@@ -176,7 +178,7 @@ export default function BookingForm({ vehicle }: Props) {
     const paymentLabel = payment === 'arrival' ? 'Cash on Arrival' : 'Card on Arrival';
 
     const extraLines: string[] = [];
-    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * 5)}`);
+    if (babySeat > 0) extraLines.push(`  • Baby Seat x${babySeat}: €${fmt2(babySeat * babySeatPrice)}`);
     if (childBooster > 0) extraLines.push(`  • Child Booster Seat x${childBooster}: €${fmt2(childBooster * 5)}`);
     if (addDriver) extraLines.push(`  • Second Driver: Free`);
     if (tyreWaiver) {
@@ -493,7 +495,7 @@ export default function BookingForm({ vehicle }: Props) {
                     <div>
                       <p className="text-sm font-bold text-gray-900">Baby Seat</p>
                       <p className="mt-0.5 text-xs text-gray-400">0 – 4 yrs</p>
-                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€5.00 / Trip</p>
+                      <p className="mt-1.5 text-sm font-bold text-brand-blue">€{fmt2(babySeatPrice)} / Trip</p>
                     </div>
                   </div>
                   <div className="mt-auto  flex items-center justify-between rounded-xl border border-gray-200 p-1">
@@ -903,7 +905,7 @@ export default function BookingForm({ vehicle }: Props) {
                   {babySeat > 0 && (
                     <div className="flex justify-between text-gray-700">
                       <span>Baby Seat ({babySeat})</span>
-                      <span className="font-medium">€{fmt2(babySeat * 5)}</span>
+                      <span className="font-medium">€{fmt2(babySeat * babySeatPrice)}</span>
                     </div>
                   )}
                   {childBooster > 0 && (

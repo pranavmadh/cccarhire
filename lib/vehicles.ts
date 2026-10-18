@@ -47,6 +47,7 @@ export async function addVehicle(input: CreateVehicleInput): Promise<Vehicle> {
     insuranceReducedPrice: input.insuranceReducedPrice,
     tyreWaiverPrice: input.tyreWaiverPrice,
     tyreWaiverBilling: input.tyreWaiverBilling,
+    babySeatPrice: input.babySeatPrice,
     image: input.imagePath,
     popular: input.popular,
     createdAt: new Date().toISOString(),
@@ -97,6 +98,7 @@ export async function updateVehicle(
     insuranceReducedPrice?: number | null;
     tyreWaiverPrice?: number | null;
     tyreWaiverBilling?: TyreWaiverBilling | null;
+    babySeatPrice?: number | null;
     popular?: boolean;
     imagePath?: string;
   }
@@ -122,6 +124,7 @@ export async function updateVehicle(
   if ("insuranceReducedPrice" in input) updates.insuranceReducedPrice = input.insuranceReducedPrice;
   if ("tyreWaiverPrice" in input) updates.tyreWaiverPrice = input.tyreWaiverPrice;
   if ("tyreWaiverBilling" in input) updates.tyreWaiverBilling = input.tyreWaiverBilling;
+  if ("babySeatPrice" in input) updates.babySeatPrice = input.babySeatPrice;
   if (input.popular !== undefined) updates.popular = input.popular;
   if (input.imagePath !== undefined) updates.image = input.imagePath;
 
@@ -133,6 +136,15 @@ export async function updateVehicle(
     .single();
   if (error) throw new Error(error.message);
   return data as Vehicle;
+}
+
+/** Sets the same baby seat price on every vehicle. */
+export async function setBabySeatPriceForAll(price: number): Promise<void> {
+  const { error } = await supabase
+    .from("vehicles")
+    .update({ babySeatPrice: price })
+    .not("id", "is", null);
+  if (error) throw new Error(error.message);
 }
 
 export async function removeVehicle(id: string): Promise<boolean> {

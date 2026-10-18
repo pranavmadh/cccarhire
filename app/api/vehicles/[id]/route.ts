@@ -1,4 +1,4 @@
-import { removeVehicle, saveUploadedImage, updateVehicle } from "@/lib/vehicles";
+import { removeVehicle, saveUploadedImage, setBabySeatPriceForAll, updateVehicle } from "@/lib/vehicles";
 import type { Transmission, TyreWaiverBilling, VehicleCategory } from "@/lib/types/vehicle";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
@@ -126,6 +126,11 @@ export async function PATCH(
       }
     }
 
+    const babySeatPriceRaw = formData.get("babySeatPrice");
+    if (babySeatPriceRaw !== null) {
+      input.babySeatPrice = babySeatPriceRaw === "" ? 5 : Number(babySeatPriceRaw);
+    }
+
     const acRaw = formData.get("airConditioning");
     const ac = parseBool(acRaw);
     if (ac !== undefined) input.airConditioning = ac;
@@ -151,6 +156,9 @@ export async function PATCH(
     }
 
     const vehicle = await updateVehicle(id, input);
+    if (parseBool(formData.get("babySeatApplyAll")) && input.babySeatPrice != null) {
+      await setBabySeatPriceForAll(input.babySeatPrice);
+    }
     revalidatePath("/");
     revalidatePath("/vehicles");
     return NextResponse.json({ vehicle });
