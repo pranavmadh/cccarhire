@@ -25,6 +25,7 @@ export interface Vehicle {
   tyreWaiverPrice?: number;
   tyreWaiverBilling?: TyreWaiverBilling;
   babySeatPrice?: number;
+  babySeatBilling?: TyreWaiverBilling;
   image: string;
   popular: boolean;
   createdAt: string;
@@ -52,6 +53,7 @@ export interface CreateVehicleInput {
   tyreWaiverPrice?: number;
   tyreWaiverBilling?: TyreWaiverBilling;
   babySeatPrice?: number;
+  babySeatBilling?: TyreWaiverBilling;
   popular: boolean;
   imagePath: string;
 }

@@ -512,7 +512,7 @@ export default function AdminVehiclesPage() {
                 {/* Baby Seat sub-section */}
                 <div className="mt-6 border-t border-gray-100 pt-5">
                   <p className="mb-1 text-sm font-semibold text-gray-700">Baby Seat</p>
-                  <p className="mb-4 text-xs text-gray-400">Set per car — defaults to €5 per seat for the whole trip.</p>
+                  <p className="mb-4 text-xs text-gray-400">Set per car — defaults to €5 per seat for the whole trip. Choose whether to charge once or per day.</p>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <label className={labelCls}>Baby Seat Price (EUR / seat)</label>
@@ -529,7 +529,19 @@ export default function AdminVehiclesPage() {
                         />
                       </div>
                     </div>
-                    <label className="flex items-center gap-2 self-end pb-2.5 text-sm text-gray-700">
+                    <div>
+                      <label className={labelCls}>Billing Type</label>
+                      <select
+                        name="babySeatBilling"
+                        defaultValue={ev?.babySeatBilling ?? "once"}
+                        className={selectCls}
+                        key={ev ? `baby-seat-billing-${ev.id}` : "baby-seat-billing-new"}
+                      >
+                        <option value="once">Whole trip (one-time)</option>
+                        <option value="daily">Per day</option>
+                      </select>
+                    </div>
+                    <label className="flex items-center gap-2 text-sm text-gray-700 sm:col-span-2">
                       <input
                         type="checkbox"
                         name="babySeatApplyAll"
@@ -537,7 +549,7 @@ export default function AdminVehiclesPage() {
                         className="h-4 w-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue"
                         key={ev ? `baby-seat-all-${ev.id}` : "baby-seat-all-new"}
                       />
-                      Apply this price to all cars
+                      Apply this price and billing to all cars
                     </label>
                   </div>
                 </div>
